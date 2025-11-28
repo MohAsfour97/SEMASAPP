@@ -1,26 +1,102 @@
-import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun } from "lucide-react";
+import { useState, useRef } from "react";
+import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun, Camera } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Profile() {
   const { t } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast({ 
+        title: "Invalid file", 
+        description: "Please select an image file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ 
+        title: "File too large", 
+        description: "Please select an image smaller than 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+    const reader = new FileReader();
+    
+    reader.onload = (event) => {
+      const base64String = event.target?.result as string;
+      updateUser({ avatar: base64String });
+      setIsUploadingPhoto(false);
+      toast({
+        title: "Profile photo updated",
+        description: "Your profile photo has been changed successfully"
+      });
+    };
+
+    reader.onerror = () => {
+      setIsUploadingPhoto(false);
+      toast({
+        title: "Error",
+        description: "Failed to upload photo",
+        variant: "destructive"
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-6">{t("trackingDetails.myProfile")}</h1>
 
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold overflow-hidden">
-          {user?.avatar ? (
-            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-          ) : (
-            <span>{user?.name?.charAt(0) || "U"}</span>
+        <div className="relative">
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold overflow-hidden">
+            {user?.avatar ? (
+              <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              <span>{user?.name?.charAt(0) || "U"}</span>
+            )}
+          </div>
+          {user?.role === "technician" && (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploadingPhoto}
+              className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 hover:bg-primary/90 transition-colors shadow-lg disabled:opacity-50"
+              data-testid="button-upload-profile-photo"
+              title="Change profile photo"
+            >
+              <Camera className="w-4 h-4" />
+            </button>
           )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+            className="hidden"
+            disabled={isUploadingPhoto}
+            data-testid="input-profile-photo"
+          />
         </div>
         <div>
           <h2 className="text-xl font-bold">{user?.name || "User"}</h2>

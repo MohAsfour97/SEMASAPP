@@ -27,6 +27,7 @@ export default function EmployeeDashboard() {
   const [activeTab, setActiveTab] = useState<"available" | "my_jobs">("available");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [viewMapOrder, setViewMapOrder] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const pendingOrders = getAllPendingOrders();
   const myJobs = user ? getOrdersByTechnician(user.id) : [];
@@ -34,8 +35,15 @@ export default function EmployeeDashboard() {
   const handleAccept = (orderId: string) => {
     if (user) {
       updateOrderStatus(orderId, "accepted", user.id);
+      setIsDialogOpen(false);
       setSelectedOrder(null);
     }
+  };
+
+  const handleDecline = (orderId: string) => {
+    updateOrderStatus(orderId, 'cancelled');
+    setIsDialogOpen(false);
+    setSelectedOrder(null);
   };
 
   const handleStatusUpdate = (orderId: string, newStatus: any) => {
@@ -95,9 +103,12 @@ export default function EmployeeDashboard() {
                     </div>
                   </div>
                   
-                  <Dialog>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button className="w-full" onClick={() => setSelectedOrder(order)}>
+                      <Button className="w-full" onClick={() => {
+                        setSelectedOrder(order);
+                        setIsDialogOpen(true);
+                      }} data-testid="button-view-details">
                         {t("dashboard.viewDetails")}
                       </Button>
                     </DialogTrigger>
@@ -125,13 +136,10 @@ export default function EmployeeDashboard() {
                           </div>
                         </div>
                         <div className="flex gap-3 pt-4">
-                          <Button variant="destructive" className="flex-1" onClick={() => {
-                            handleStatusUpdate(order.id, 'cancelled');
-                            setSelectedOrder(null);
-                          }}>
+                          <Button variant="destructive" className="flex-1" onClick={() => handleDecline(order.id)} data-testid="button-decline-order">
                             {t("dashboard.decline")}
                           </Button>
-                          <Button className="flex-1 bg-primary" onClick={() => handleAccept(order.id)}>
+                          <Button className="flex-1 bg-primary" onClick={() => handleAccept(order.id)} data-testid="button-accept-order">
                             {t("dashboard.accept")}
                           </Button>
                         </div>
@@ -232,7 +240,7 @@ export default function EmployeeDashboard() {
                       )}
                     </div>
                     {(order.status === 'accepted' || order.status === 'en_route' || order.status === 'in_progress') && (
-                      <Button variant="destructive" className="w-full" onClick={() => handleStatusUpdate(order.id, 'cancelled')}>
+                      <Button variant="destructive" className="w-full" onClick={() => handleStatusUpdate(order.id, 'cancelled')} data-testid="button-cancel-active-order">
                         <X className="w-4 h-4 mr-2" />
                         Cancel Order
                       </Button>

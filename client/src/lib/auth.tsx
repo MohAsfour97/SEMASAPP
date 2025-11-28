@@ -33,6 +33,32 @@ const MOCK_USERS: User[] = [
   { id: "3", name: "Admin User", email: "admin@semas.com", role: "admin", phone: "+966-50-111-2222" },
 ];
 
+// Helper to get saved profile updates
+const getSavedProfileUpdates = (userId: string): Partial<User> | null => {
+  try {
+    const savedProfiles = localStorage.getItem("semas_user_profiles");
+    if (savedProfiles) {
+      const profiles = JSON.parse(savedProfiles);
+      return profiles[userId] || null;
+    }
+  } catch (e) {
+    console.error("Error reading saved profiles:", e);
+  }
+  return null;
+};
+
+// Helper to save profile updates
+const saveProfileUpdates = (userId: string, updates: Partial<User>) => {
+  try {
+    const savedProfiles = localStorage.getItem("semas_user_profiles");
+    const profiles = savedProfiles ? JSON.parse(savedProfiles) : {};
+    profiles[userId] = { ...profiles[userId], ...updates };
+    localStorage.setItem("semas_user_profiles", JSON.stringify(profiles));
+  } catch (e) {
+    console.error("Error saving profile updates:", e);
+  }
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,9 +91,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
          return;
       }
       
-      setUser(foundUser);
-      localStorage.setItem("semas_user", JSON.stringify(foundUser));
-      toast({ title: `Welcome back, ${foundUser.name}!` });
+      // Merge mock user with any saved profile updates
+      const savedUpdates = getSavedProfileUpdates(foundUser.id);
+      const mergedUser = { ...foundUser, ...savedUpdates };
+      
+      setUser(mergedUser);
+      localStorage.setItem("semas_user", JSON.stringify(mergedUser));
+      toast({ title: `Welcome back, ${mergedUser.name}!` });
       setLocation("/");
     } else {
       toast({ title: "Login Failed", description: "Invalid email or password", variant: "destructive" });
@@ -116,11 +146,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const newUser = { ...user, ...updatedUser };
       setUser(newUser);
       localStorage.setItem("semas_user", JSON.stringify(newUser));
+      // Also save to persistent profile updates
+      saveProfileUpdates(user.id, updatedUser);
     }
   };
 
   const getUserById = (userId: string) => {
-    return MOCK_USERS.find(u => u.id === userId);
+    const mockUser = MOCK_USERS.find(u => u.id === userId);
+    if (mockUser) {
+      // Merge with any saved profile updates
+      const savedUpdates = getSavedProfileUpdates(userId);
+      return { ...mockUser, ...savedUpdates };
+    }
+    return undefined;
   };
 
   return (

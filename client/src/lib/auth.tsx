@@ -26,8 +26,8 @@ const AuthContext = createContext<AuthContextType | null>(null);
 // Mock Database
 const MOCK_USERS: User[] = [
   { id: "1", name: "Jane Doe", email: "jane@example.com", role: "customer" },
-  { id: "2", name: "Mike Johnson", email: "mike@pestguard.com", role: "technician", avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d" },
-  { id: "3", name: "Admin User", email: "admin@pestguard.com", role: "admin" },
+  { id: "2", name: "Mike Johnson", email: "mike@semas.com", role: "technician", avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d" },
+  { id: "3", name: "Admin User", email: "admin@semas.com", role: "admin" },
 ];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for persisted user
-    const savedUser = localStorage.getItem("pestguard_user");
+    const savedUser = localStorage.getItem("semas_user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       
       setUser(foundUser);
-      localStorage.setItem("pestguard_user", JSON.stringify(foundUser));
+      localStorage.setItem("semas_user", JSON.stringify(foundUser));
       toast({ title: `Welcome back, ${foundUser.name}!` });
       setLocation("/");
     } else {
@@ -95,8 +95,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // but we will log them in immediately.
     
     setUser(newUser);
-    localStorage.setItem("pestguard_user", JSON.stringify(newUser));
-    toast({ title: "Account Created", description: "Welcome to PestGuard!" });
+    localStorage.setItem("semas_user", JSON.stringify(newUser));
+    toast({ title: "Account Created", description: "Welcome to SEMAS!" });
     setLocation("/");
     setIsLoading(false);
   };

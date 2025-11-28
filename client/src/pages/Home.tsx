@@ -34,13 +34,13 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-bold mb-2" style={{ 
+            <h1 className="text-4xl font-bold mb-2" style={{ 
               color: '#ffffff',
               WebkitTextStroke: '1.5px #2dd4bf',
               textShadow: '0 0 15px #2dd4bf, 0 0 25px #14b8a6',
               paintOrder: 'stroke fill'
             }}>{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
-            <p className="text-white/90 text-sm mb-4 max-w-[80%]">
+            <p className="text-white/90 text-base mb-4 max-w-[80%]">
               {t("home.professional")}
             </p>
             <Link href="/book">

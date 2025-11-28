@@ -63,23 +63,23 @@ export default function Home() {
         </div>
 
         {/* Active Order */}
-        <section>
+        <section data-testid="section-active-service">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold">{t("home.activeService")}</h2>
+            <h2 className="text-lg font-semibold" data-testid="heading-active-service">{t("home.activeService")}</h2>
             <Link href="/track">
-              <span className="text-primary text-sm font-medium cursor-pointer">{t("home.track")}</span>
+              <span className="text-primary text-sm font-medium cursor-pointer" data-testid="link-track-order">{t("home.track")}</span>
             </Link>
           </div>
-          <Card className="overflow-hidden border-none shadow-md bg-card relative">
+          <Card className="overflow-hidden border-none shadow-md bg-card relative" data-testid="card-active-service">
             <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-            <CardContent className="p-4">
+            <CardContent className="p-4" data-testid="content-active-service">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <h3 className="font-semibold text-foreground">Quarterly Maintenance</h3>
-                  <p className="text-sm text-muted-foreground">Today, 2:00 PM - 4:00 PM</p>
+                  <h3 className="font-semibold text-foreground" data-testid="text-service-name">Quarterly Maintenance</h3>
+                  <p className="text-sm text-muted-foreground" data-testid="text-service-time">{t("home.serviceTime") || "Today, 2:00 PM - 4:00 PM"}</p>
                 </div>
-                <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">
-                  En Route
+                <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full" data-testid="badge-status">
+                  {t("home.enRoute")}
                 </span>
               </div>
               <div className="flex items-center gap-3 pt-3 border-t border-border/50">
@@ -88,8 +88,8 @@ export default function Home() {
                   <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" alt="Tech" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">Mike Johnson</p>
-                  <p className="text-xs text-muted-foreground">Technician</p>
+                  <p className="text-sm font-medium" data-testid="text-technician-name">Mike Johnson</p>
+                  <p className="text-xs text-muted-foreground" data-testid="text-technician-role">{t("common.technician")}</p>
                 </div>
                 <Button size="icon" variant="ghost" className="rounded-full h-8 w-8 text-primary bg-primary/5">
                   <Phone className="w-4 h-4" />
@@ -102,9 +102,9 @@ export default function Home() {
         {/* Popular Services */}
         <section>
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold">Popular Services</h2>
+            <h2 className="text-lg font-semibold">{t("home.popularServices")}</h2>
             <Link href="/services">
-              <span className="text-primary text-sm font-medium cursor-pointer">View All</span>
+              <span className="text-primary text-sm font-medium cursor-pointer" data-testid="link-view-all-services">{t("home.viewAll")}</span>
             </Link>
           </div>
           <div className="space-y-3">

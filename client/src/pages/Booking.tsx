@@ -15,11 +15,11 @@ import { useOrders } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
 import LocationPicker from "@/components/LocationPicker";
 
-const steps = [
-  { id: 1, title: "Service Details" },
-  { id: 2, title: "Date & Time" },
-  { id: 3, title: "Information" },
-  { id: 4, title: "Payment" },
+const getSteps = (t: any) => [
+  { id: 1, title: t("bookingSteps.serviceDetails") },
+  { id: 2, title: t("bookingSteps.dateTime") },
+  { id: 3, title: t("bookingSteps.information") },
+  { id: 4, title: t("bookingSteps.payment") },
 ];
 
 const serviceMap: Record<string, string> = {
@@ -122,13 +122,13 @@ export default function Booking() {
         )}
         <div>
           <h1 className="text-2xl font-bold">{t("bookingDetails.bookService")}</h1>
-          <p className="text-sm text-muted-foreground">{t("bookingDetails.step")} {step} {t("bookingDetails.of")} 4: {steps[step-1].title}</p>
+          <p className="text-sm text-muted-foreground">{t("bookingDetails.step")} {step} {t("bookingDetails.of")} 4: {getSteps(t)[step-1].title}</p>
         </div>
       </div>
 
       {/* Progress Bar */}
       <div className="flex gap-2 mb-8">
-        {steps.map((s) => (
+        {getSteps(t).map((s) => (
           <div 
             key={s.id} 
             className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${

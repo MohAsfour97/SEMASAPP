@@ -54,7 +54,7 @@ function NavigationWrapper() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="pestguard-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="semas-ui-theme">
         <LanguageProvider>
           <TooltipProvider>
             <AuthProvider>

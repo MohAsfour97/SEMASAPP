@@ -25,6 +25,10 @@ export const translations = {
       arrival: "Arrival",
       activeService: "Active Service",
       track: "Track",
+      popularServices: "Popular Services",
+      viewAll: "View All",
+      enRoute: "En Route",
+      serviceTime: "09:00 AM - 11:00 AM",
     },
     // Navigation
     nav: {
@@ -188,6 +192,13 @@ export const translations = {
       emailUpdates: "Email Updates",
       signOut: "Sign Out",
     },
+    // Booking Steps
+    bookingSteps: {
+      serviceDetails: "Service Details",
+      dateTime: "Date & Time",
+      information: "Information",
+      payment: "Payment",
+    },
     // Common
     common: {
       loading: "Loading...",
@@ -233,6 +244,10 @@ export const translations = {
       arrival: "الوصول",
       activeService: "الخدمة النشطة",
       track: "تتبع",
+      popularServices: "الخدمات الشهيرة",
+      viewAll: "عرض الكل",
+      enRoute: "في الطريق",
+      serviceTime: "09:00 صباحاً - 11:00 صباحاً",
     },
     // Navigation
     nav: {
@@ -395,6 +410,13 @@ export const translations = {
       pushNotifications: "إشعارات دفع",
       emailUpdates: "تحديثات البريد الإلكتروني",
       signOut: "تسجيل الخروج",
+    },
+    // Booking Steps
+    bookingSteps: {
+      serviceDetails: "تفاصيل الخدمة",
+      dateTime: "التاريخ والوقت",
+      information: "المعلومات",
+      payment: "الدفع",
     },
     // Common
     common: {

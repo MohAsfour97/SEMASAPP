@@ -223,47 +223,47 @@ export default function Home() {
                 data-testid="map-semas-office"
               />
             </div>
-            <div className="p-4 border-t border-border/30">
-              <p className="font-semibold text-foreground mb-2">{t("home.office")}</p>
-              <p className="text-sm text-muted-foreground">Riyadh, Saudi Arabia</p>
+            <div className={`p-4 border-t border-border/30 flex items-center justify-between ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
+              <div>
+                <p className="font-semibold text-foreground mb-2">{t("home.office")}</p>
+                <p className="text-sm text-muted-foreground">Riyadh, Saudi Arabia</p>
+              </div>
+              <div className="flex gap-2">
+                {/* WhatsApp Icon */}
+                <a 
+                  href="https://wa.me/966"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="button-whatsapp"
+                  title={t("home.whatsapp")}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer flex-shrink-0"
+                  >
+                    <Phone className="w-4 h-4 text-white" />
+                  </motion.div>
+                </a>
+
+                {/* Send Inquiry Icon */}
+                <button 
+                  onClick={() => alert("Inquiry form would open here")}
+                  data-testid="button-inquiry"
+                  title={t("home.sendInquiry")}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.2, rotate: -5 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer flex-shrink-0"
+                  >
+                    <MessageCircle className="w-4 h-4 text-white" />
+                  </motion.div>
+                </button>
+              </div>
             </div>
           </div>
         </section>
-
-        {/* Floating Contact Icons */}
-        <div className="fixed right-4 bottom-28 flex flex-col gap-3 z-40">
-          {/* WhatsApp Icon */}
-          <a 
-            href="https://wa.me/966"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="button-whatsapp"
-            title={t("home.whatsapp")}
-          >
-            <motion.div
-              whileHover={{ scale: 1.2, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
-              className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center shadow-lg hover:shadow-xl transition-all cursor-pointer"
-            >
-              <Phone className="w-5 h-5 text-white" />
-            </motion.div>
-          </a>
-
-          {/* Send Inquiry Icon */}
-          <button 
-            onClick={() => alert("Inquiry form would open here")}
-            data-testid="button-inquiry"
-            title={t("home.sendInquiry")}
-          >
-            <motion.div
-              whileHover={{ scale: 1.2, rotate: -5 }}
-              whileTap={{ scale: 0.9 }}
-              className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center shadow-lg hover:shadow-xl transition-all cursor-pointer"
-            >
-              <MessageCircle className="w-5 h-5 text-white" />
-            </motion.div>
-          </button>
-        </div>
       </div>
     </div>
   );

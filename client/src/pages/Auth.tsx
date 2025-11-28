@@ -98,7 +98,7 @@ export default function AuthPage() {
             <Shield className="w-8 h-8" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-1">SEMAS</h1>
-          <p className="text-muted-foreground/80">{t("common.loading")}</p>
+          <p className="text-muted-foreground/80">{t("home.professional")}</p>
         </div>
 
         {/* Auth Card */}
@@ -184,7 +184,7 @@ export default function AuthPage() {
 
           {/* Demo Logins */}
           <div className="mt-6 pt-6 border-t border-border/50">
-            <p className="text-xs text-center text-muted-foreground mb-3">{t("common.loading")}</p>
+            <p className="text-xs text-center text-muted-foreground mb-3">{t("authPage.demoLoginsTitle")}</p>
             <div className="grid grid-cols-2 gap-3">
               <Button 
                 variant="outline" 
@@ -192,7 +192,7 @@ export default function AuthPage() {
                 className="text-xs"
                 onClick={() => fillDemo("customer")}
               >
-                Customer
+                {t("common.customer")}
               </Button>
               <Button 
                 variant="outline" 
@@ -200,14 +200,14 @@ export default function AuthPage() {
                 className="text-xs"
                 onClick={() => fillDemo("tech")}
               >
-                Employee
+                {t("dashboard.technicianPortal")}
               </Button>
             </div>
           </div>
         </div>
         
         <p className="text-center text-xs text-muted-foreground mt-6">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
+          {t("legal.termsAndPrivacy")}
         </p>
       </div>
     </div>

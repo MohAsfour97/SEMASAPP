@@ -24,8 +24,8 @@ export default function Tracking() {
   const copyPhoneNumber = (orderId: string, phoneNumber: string | undefined) => {
     if (!phoneNumber) {
       toast({
-        title: "Phone number not available",
-        description: "Unable to copy phone number",
+        title: t("common.phoneNumberNotAvailable"),
+        description: t("common.phoneNumberCopyFailed"),
         variant: "destructive"
       });
       return;
@@ -34,8 +34,8 @@ export default function Tracking() {
     navigator.clipboard.writeText(phoneNumber);
     setCopiedPhoneId(orderId);
     toast({
-      title: "Copied!",
-      description: "Phone number copied to clipboard"
+      title: t("common.copied"),
+      description: t("common.phoneNumberCopied")
     });
     setTimeout(() => setCopiedPhoneId(null), 2000);
   };

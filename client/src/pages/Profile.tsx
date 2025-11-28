@@ -22,8 +22,8 @@ export default function Profile() {
     // Validate file type
     if (!file.type.startsWith("image/")) {
       toast({ 
-        title: "Invalid file", 
-        description: "Please select an image file",
+        title: t("fileUpload.invalidFile"), 
+        description: t("fileUpload.selectImageFile"),
         variant: "destructive"
       });
       return;
@@ -32,8 +32,8 @@ export default function Profile() {
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({ 
-        title: "File too large", 
-        description: "Please select an image smaller than 5MB",
+        title: t("fileUpload.fileTooLarge"), 
+        description: t("fileUpload.fileSizeLimit"),
         variant: "destructive"
       });
       return;
@@ -47,16 +47,16 @@ export default function Profile() {
       updateUser({ avatar: base64String });
       setIsUploadingPhoto(false);
       toast({
-        title: "Profile photo updated",
-        description: "Your profile photo has been changed successfully"
+        title: t("fileUpload.photoUpdated"),
+        description: t("fileUpload.photoUpdateSuccess")
       });
     };
 
     reader.onerror = () => {
       setIsUploadingPhoto(false);
       toast({
-        title: "Error",
-        description: "Failed to upload photo",
+        title: t("common.error"),
+        description: t("fileUpload.uploadError"),
         variant: "destructive"
       });
     };

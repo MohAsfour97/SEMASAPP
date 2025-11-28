@@ -142,7 +142,7 @@ export default function Services() {
 
               <div className="flex items-center justify-between pl-16 mt-4 border-t border-border/50 pt-4">
                 <div>
-                  <span className="text-xs text-muted-foreground block">{t("servicesDetails.startingAt")}</span>
+                  <span className="text-xs text-muted-foreground block">{t("common.startingAt")}</span>
                   <span className="text-xl font-bold text-primary">{service.price}</span>
                 </div>
                 <Link 

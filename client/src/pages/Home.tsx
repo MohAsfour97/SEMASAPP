@@ -160,7 +160,7 @@ export default function Home() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-foreground">{service.name}</h3>
-                        <p className="text-sm text-muted-foreground">Starting at {service.price}</p>
+                        <p className="text-sm text-muted-foreground">{t("common.startingAt")} {service.price}</p>
                       </div>
                       <ArrowRight className="w-5 h-5 text-muted-foreground/50" />
                     </CardContent>

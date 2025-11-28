@@ -118,6 +118,19 @@ export const translations = {
       markInProgress: "Mark In Progress",
       markCompleted: "Mark Completed",
       noJobsAccepted: "No jobs accepted yet.",
+      startTravel: "Start Travel",
+      arrivedAtSite: "Arrived at Site",
+      hideMap: "Hide Map",
+      viewMap: "View Live Location Map",
+      jobDone: "Job Done",
+    },
+    // Legal
+    legal: {
+      termsAndPrivacy: "By continuing, you agree to our Terms of Service and Privacy Policy.",
+    },
+    // Auth Page
+    authPage: {
+      demoLoginsTitle: "Try Demo Logins",
     },
     // Chat
     chat: {
@@ -221,6 +234,21 @@ export const translations = {
       technician: "technician",
       orderNumber: "Order #",
       noOrderFound: "Order not found",
+      startingAt: "Starting at",
+      copied: "Copied!",
+      phoneNumberCopied: "Phone number copied to clipboard",
+      phoneNumberNotAvailable: "Phone number not available",
+      phoneNumberCopyFailed: "Unable to copy phone number",
+    },
+    // File Upload
+    fileUpload: {
+      invalidFile: "Invalid file",
+      selectImageFile: "Please select an image file",
+      fileTooLarge: "File too large",
+      fileSizeLimit: "Please select an image smaller than 5MB",
+      photoUpdated: "Profile photo updated",
+      photoUpdateSuccess: "Your profile photo has been changed successfully",
+      uploadError: "Failed to upload photo",
     },
   },
   ar: {
@@ -338,6 +366,19 @@ export const translations = {
       markInProgress: "ابدأ العمل",
       markCompleted: "مكتمل",
       noJobsAccepted: "لم يتم قبول أي وظائف حتى الآن.",
+      startTravel: "ابدأ الرحلة",
+      arrivedAtSite: "وصلت إلى الموقع",
+      hideMap: "إخفاء الخريطة",
+      viewMap: "عرض خريطة الموقع المباشر",
+      jobDone: "تم إنجاز المهمة",
+    },
+    // Legal
+    legal: {
+      termsAndPrivacy: "بمتابعتك، فإنك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.",
+    },
+    // Auth Page
+    authPage: {
+      demoLoginsTitle: "جرب بيانات الدخول التجريبية",
     },
     // Chat
     chat: {
@@ -441,6 +482,21 @@ export const translations = {
       technician: "الفني",
       orderNumber: "طلب رقم",
       noOrderFound: "لم يتم العثور على الطلب",
+      startingAt: "بدء من",
+      copied: "تم النسخ!",
+      phoneNumberCopied: "تم نسخ رقم الهاتف إلى الحافظة",
+      phoneNumberNotAvailable: "رقم الهاتف غير متاح",
+      phoneNumberCopyFailed: "فشل نسخ رقم الهاتف",
+    },
+    // File Upload
+    fileUpload: {
+      invalidFile: "ملف غير صالح",
+      selectImageFile: "يرجى تحديد ملف صورة",
+      fileTooLarge: "الملف كبير جداً",
+      fileSizeLimit: "يرجى تحديد صورة أصغر من 5MB",
+      photoUpdated: "تم تحديث صورة الملف الشخصي",
+      photoUpdateSuccess: "تم تغيير صورة ملفك الشخصي بنجاح",
+      uploadError: "فشل تحميل الصورة",
     },
   },
 };

@@ -199,12 +199,12 @@ export default function EmployeeDashboard() {
                         <div className="space-y-2">
                           <LiveMap status={order.status} customerAddress={order.address} showRoute={true} />
                           <Button variant="outline" size="sm" onClick={() => setViewMapOrder(null)} className="w-full text-xs">
-                            Hide Map
+                            {t("dashboard.hideMap")}
                           </Button>
                         </div>
                       ) : (
                         <Button variant="secondary" size="sm" onClick={() => setViewMapOrder(order.id)} className="w-full flex items-center gap-2">
-                           <MapPin className="w-4 h-4" /> View Live Location Map
+                           <MapPin className="w-4 h-4" /> {t("dashboard.viewMap")}
                         </Button>
                       )}
                     </div>
@@ -214,29 +214,29 @@ export default function EmployeeDashboard() {
                     <div className="grid grid-cols-2 gap-2">
                       {order.status === 'accepted' && (
                         <Button className="col-span-2" onClick={() => handleStatusUpdate(order.id, 'en_route')}>
-                          Start Travel
+                          {t("dashboard.startTravel")}
                         </Button>
                       )}
                       {order.status === 'en_route' && (
                         <Button className="col-span-2 bg-purple-600 hover:bg-purple-700" onClick={() => handleStatusUpdate(order.id, 'in_progress')}>
-                          Arrived at Site
+                          {t("dashboard.arrivedAtSite")}
                         </Button>
                       )}
                       {order.status === 'in_progress' && (
                         <Button className="col-span-2 bg-green-600 hover:bg-green-700" onClick={() => handleStatusUpdate(order.id, 'completed')}>
-                          Mark Completed
+                          {t("dashboard.markCompleted")}
                         </Button>
                       )}
                       {order.status === 'completed' && (
                         <Button variant="outline" disabled className="col-span-2">
-                          Job Done <Check className="w-4 h-4 ml-2" />
+                          {t("dashboard.jobDone")} <Check className="w-4 h-4 ml-2" />
                         </Button>
                       )}
                     </div>
                     {(order.status === 'accepted' || order.status === 'en_route' || order.status === 'in_progress') && (
                       <Button variant="destructive" className="w-full" onClick={() => handleStatusUpdate(order.id, 'cancelled')} data-testid="button-cancel-active-order">
                         <X className="w-4 h-4 mr-2" />
-                        Cancel Order
+                        {t("dashboard.cancel")}
                       </Button>
                     )}
                   </div>

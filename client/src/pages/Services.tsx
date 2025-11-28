@@ -228,9 +228,6 @@ export default function Services() {
                     className={`w-14 h-14 rounded-xl ${service.bg} flex items-center justify-center ${service.color} shrink-0 shadow-md relative overflow-hidden`}
                     whileHover={{ scale: 1.15, rotate: 8 }}
                     transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    animate={{ 
-                      y: animatedCards.has(service.id) ? [0, -3, 0] : 0
-                    }}
                     style={{
                       animation: animatedCards.has(service.id) ? `float 3s ease-in-out ${index * 0.2}s infinite` : 'none'
                     }}

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { format } from "date-fns";
 
+import LiveMap from "@/components/LiveMap";
+
 export default function Tracking() {
   const { user } = useAuth();
   const { getOrdersByCustomer } = useOrders();
@@ -73,6 +75,13 @@ export default function Tracking() {
                 <span>09:00 AM - 11:00 AM</span>
               </div>
             </div>
+
+            {/* Live Map for Customer */}
+            {(order.status === 'en_route' || order.status === 'in_progress') && (
+               <div className="mb-4 -mx-4 sm:mx-0">
+                 <LiveMap status={order.status} customerAddress={order.address} showRoute={true} />
+               </div>
+            )}
 
             {/* Show Tech Info if Accepted/Active */}
             {order.technicianId && (

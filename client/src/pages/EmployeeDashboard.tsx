@@ -16,12 +16,15 @@ import {
 import { Link } from "wouter";
 import { format } from "date-fns";
 
+import LiveMap from "@/components/LiveMap";
+
 export default function EmployeeDashboard() {
   const { user } = useAuth();
   const { getAllPendingOrders, getOrdersByTechnician, updateOrderStatus } = useOrders();
   
   const [activeTab, setActiveTab] = useState<"available" | "my_jobs">("available");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [viewMapOrder, setViewMapOrder] = useState<string | null>(null);
 
   const pendingOrders = getAllPendingOrders();
   const myJobs = user ? getOrdersByTechnician(user.id) : [];
@@ -166,6 +169,24 @@ export default function EmployeeDashboard() {
                   
                   <h3 className="font-bold text-lg mb-1">{order.customerName}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{order.address}</p>
+
+                  {/* Map View Toggle */}
+                  {(order.status === 'en_route' || order.status === 'in_progress') && (
+                    <div className="mb-4">
+                      {viewMapOrder === order.id ? (
+                        <div className="space-y-2">
+                          <LiveMap status={order.status} customerAddress={order.address} showRoute={true} />
+                          <Button variant="outline" size="sm" onClick={() => setViewMapOrder(null)} className="w-full text-xs">
+                            Hide Map
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button variant="secondary" size="sm" onClick={() => setViewMapOrder(order.id)} className="w-full flex items-center gap-2">
+                           <MapPin className="w-4 h-4" /> View Live Location Map
+                        </Button>
+                      )}
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-2">
                     {order.status === 'accepted' && (

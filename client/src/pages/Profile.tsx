@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
-import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun, Camera } from "lucide-react";
+import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun, Camera, X } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +16,9 @@ export default function Profile() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [showPersonalInfo, setShowPersonalInfo] = useState(false);
+  const [editName, setEditName] = useState(user?.name || "");
+  const [editPhone, setEditPhone] = useState(user?.phone || "");
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,6 +69,28 @@ export default function Profile() {
     reader.readAsDataURL(file);
   };
 
+  const handleSavePersonalInfo = () => {
+    if (!editName.trim()) {
+      toast({
+        title: t("common.error"),
+        description: "Name cannot be empty",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    updateUser({ 
+      name: editName.trim(),
+      phone: editPhone.trim()
+    });
+
+    setShowPersonalInfo(false);
+    toast({
+      title: t("common.success"),
+      description: "Personal information updated successfully"
+    });
+  };
+
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-6">{t("trackingDetails.myProfile")}</h1>
@@ -109,11 +136,16 @@ export default function Profile() {
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 pl-1">{t("profile.account")}</h3>
           <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden">
             {[
-              { icon: User, label: t("trackingDetails.personalInformation") },
-              { icon: Shield, label: t("trackingDetails.securityPrivacy") },
-              { icon: Bell, label: t("trackingDetails.notifications") },
+              { id: "personal", icon: User, label: t("trackingDetails.personalInformation") },
+              { id: "security", icon: Shield, label: t("trackingDetails.securityPrivacy") },
+              { id: "notifications", icon: Bell, label: t("trackingDetails.notifications") },
             ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between p-4 border-b border-border/30 last:border-0 hover:bg-secondary/10 cursor-pointer transition-colors">
+              <div 
+                key={i}
+                onClick={() => item.id === "personal" && setShowPersonalInfo(true)}
+                className="flex items-center justify-between p-4 border-b border-border/30 last:border-0 hover:bg-secondary/10 cursor-pointer transition-colors"
+                data-testid={`button-profile-${item.id}`}
+              >
                 <div className="flex items-center gap-3">
                   <item.icon className="w-5 h-5 text-muted-foreground" />
                   <span className="font-medium">{item.label}</span>
@@ -156,6 +188,69 @@ export default function Profile() {
           <LogOut className="w-4 h-4" /> {t("trackingDetails.signOut")}
         </Button>
       </div>
+
+      {/* Personal Information Modal */}
+      {showPersonalInfo && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
+          <div className="w-full bg-card rounded-t-3xl p-6 space-y-4 animate-in slide-in-from-bottom-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">{t("trackingDetails.personalInformation")}</h2>
+              <button
+                onClick={() => setShowPersonalInfo(false)}
+                className="p-1 hover:bg-secondary rounded-lg transition-colors"
+                data-testid="button-close-personal-info"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">{t("auth.name")}</Label>
+                <Input
+                  id="edit-name"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder={t("auth.name")}
+                  className="h-11 rounded-xl bg-card/50"
+                  data-testid="input-edit-name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-phone">Phone Number</Label>
+                <Input
+                  id="edit-phone"
+                  type="tel"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  placeholder="e.g., +966 50 123 4567"
+                  className="h-11 rounded-xl bg-card/50"
+                  data-testid="input-edit-phone"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                variant="outline"
+                className="flex-1 h-11 rounded-xl"
+                onClick={() => setShowPersonalInfo(false)}
+                data-testid="button-cancel-personal-info"
+              >
+                {t("common.cancel")}
+              </Button>
+              <Button
+                className="flex-1 h-11 rounded-xl"
+                onClick={handleSavePersonalInfo}
+                data-testid="button-save-personal-info"
+              >
+                {t("common.save")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -317,11 +317,11 @@ export default function Booking() {
           disabled={loading}
         >
           {loading ? (
-            "Processing..."
+            t("bookingDetails.processing")
           ) : step === 4 ? (
-            <>Pay & Book <Check className="ml-2 w-5 h-5" /></>
+            <>{t("bookingDetails.payAndBook")} <Check className="ml-2 w-5 h-5" /></>
           ) : (
-            <>Continue <ArrowRight className="ml-2 w-5 h-5" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} /></>
+            <>{t("bookingDetails.continue")} <ArrowRight className="ml-2 w-5 h-5" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} /></>
           )}
         </Button>
       </div>

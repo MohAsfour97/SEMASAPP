@@ -198,6 +198,9 @@ export const translations = {
       expires: "Expires",
       change: "Change",
       total: "Total",
+      continue: "Continue",
+      processing: "Processing...",
+      payAndBook: "Pay & Book",
     },
     // Tracking Details
     trackingDetails: {
@@ -460,6 +463,9 @@ export const translations = {
       expires: "انتهاء الصلاحية",
       change: "تغيير",
       total: "الإجمالي",
+      continue: "متابعة",
+      processing: "جاري المعالجة...",
+      payAndBook: "دفع واحجز",
     },
     // Tracking Details
     trackingDetails: {

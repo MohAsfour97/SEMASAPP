@@ -34,7 +34,10 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-bold mb-2" style={{ color: '#2dd4bf' }}>{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
+            <h1 className="text-3xl font-bold mb-2" style={{ 
+              color: '#2dd4bf',
+              textShadow: '0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5), -2px -2px 0 rgba(255, 255, 255, 0.6), 2px 2px 0 rgba(255, 255, 255, 0.6)'
+            }}>{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
             <p className="text-white/90 text-sm mb-4 max-w-[80%]">
               {t("home.professional")}
             </p>

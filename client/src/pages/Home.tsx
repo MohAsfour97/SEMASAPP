@@ -9,6 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
 
+const serviceTranslationMap: Record<string, string> = {
+  "General Pest Control": "servicesDetails.generalPestControl",
+  "Termite Inspection": "servicesDetails.termiteInspection",
+  "Rodent Control": "servicesDetails.rodentExclusion",
+  "Bed Bug Treatment": "servicesDetails.mosquitoShield",
+};
+
+const getTranslatedServiceName = (serviceName: string, t: any): string => {
+  const key = serviceTranslationMap[serviceName];
+  return key ? t(key) : serviceName;
+};
+
 export default function Home() {
   const { t, language } = useLanguage();
   const { user, getUserById } = useAuth();
@@ -112,7 +124,7 @@ export default function Home() {
               <CardContent className="p-4" data-testid="content-active-service">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="font-semibold text-foreground" data-testid="text-service-name">{activeOrder.serviceType}</h3>
+                    <h3 className="font-semibold text-foreground" data-testid="text-service-name">{getTranslatedServiceName(activeOrder.serviceType, t)}</h3>
                     <p className="text-sm text-muted-foreground" data-testid="text-service-time">{t("home.serviceTime")}</p>
                   </div>
                   <span className={`text-xs font-bold px-2 py-1 rounded-full ${

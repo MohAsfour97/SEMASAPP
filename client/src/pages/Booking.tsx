@@ -216,11 +216,11 @@ export default function Booking() {
             >
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Full Name</Label>
+                  <Label>{t("bookingDetails.fullName")}</Label>
                   <Input defaultValue={user?.name} disabled className="bg-card h-12 rounded-xl opacity-75" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Address</Label>
+                  <Label>{t("bookingDetails.address")}</Label>
                   <div className="space-y-3">
                     <LocationPicker 
                       onSelect={setAddress} 
@@ -231,18 +231,18 @@ export default function Booking() {
                       <Input 
                         value={address} 
                         onChange={(e) => setAddress(e.target.value)} 
-                        placeholder="Type manually or pick from map" 
+                        placeholder={t("bookingDetails.typeManually")} 
                         className="pl-10 bg-card h-12 rounded-xl" 
                       />
                     </div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Problem Description</Label>
+                  <Label>{t("bookingDetails.problemDescription")}</Label>
                   <Textarea 
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
-                    placeholder="Describe the pests you've seen..." 
+                    placeholder={t("bookingDetails.describeTheProblem")} 
                     className="bg-card rounded-xl min-h-[120px]" 
                   />
                 </div>
@@ -259,38 +259,38 @@ export default function Booking() {
               className="space-y-6"
             >
               <div className="bg-card rounded-2xl p-6 shadow-sm border border-border/50 space-y-4">
-                <h3 className="font-semibold text-lg border-b pb-4">Order Summary</h3>
+                <h3 className="font-semibold text-lg border-b pb-4">{t("bookingDetails.orderSummary")}</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Service</span>
+                    <span>{t("dashboard.service")}</span>
                     <span className="text-foreground font-medium">{serviceType}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Date</span>
-                    <span className="text-foreground font-medium">{date ? format(date, "MMM do, yyyy") : "Selected Date"}</span>
+                    <span>{t("bookingDetails.selectDate")}</span>
+                    <span className="text-foreground font-medium">{date ? format(date, "MMM do, yyyy") : t("bookingDetails.selectedDate")}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Time</span>
-                    <span className="text-foreground font-medium">{time || "Not selected"}</span>
+                    <span>{t("bookingDetails.selectTime")}</span>
+                    <span className="text-foreground font-medium">{time || t("bookingDetails.notSelected")}</span>
                   </div>
                   <div className="pt-4 mt-4 border-t flex justify-between items-center">
-                    <span className="font-bold">Total</span>
+                    <span className="font-bold">{t("bookingDetails.total")}</span>
                     <span className="text-xl font-bold text-primary">149 {t("common.sar")}</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <Label>Payment Method</Label>
+                <Label>{t("bookingDetails.paymentMethod")}</Label>
                 <div className="flex items-center gap-4 p-4 border rounded-xl bg-card">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <CreditCard className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium">•••• •••• •••• 4242</p>
-                    <p className="text-xs text-muted-foreground">Expires 12/25</p>
+                    <p className="text-xs text-muted-foreground">{t("bookingDetails.expires")} 12/25</p>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-primary">Change</Button>
+                  <Button variant="ghost" size="sm" className="text-primary">{t("bookingDetails.change")}</Button>
                 </div>
               </div>
             </motion.div>

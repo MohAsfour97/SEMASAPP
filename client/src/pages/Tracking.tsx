@@ -129,7 +129,7 @@ export default function Tracking() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">{technician?.name || "Technician"}</p>
+                    <p className="text-sm font-medium text-foreground">{technician?.name || t("common.technician")}</p>
                     <p className="text-xs text-muted-foreground">{t("trackingDetails.yourExpertOnCase")}</p>
                   </div>
                   <div className="flex gap-1">

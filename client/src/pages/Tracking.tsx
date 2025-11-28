@@ -2,23 +2,43 @@ import { useOrders } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
 import { useLanguage } from "@/lib/language";
 import { motion } from "framer-motion";
-import { Clock, MapPin, CheckCircle2, MessageSquare, ChevronRight, Star } from "lucide-react";
+import { Clock, MapPin, CheckCircle2, MessageSquare, ChevronRight, Star, Phone, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 
 import LiveMap from "@/components/LiveMap";
 
 export default function Tracking() {
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, getUserById } = useAuth();
   const { getOrdersByCustomer, rateOrder } = useOrders();
   const { toast } = useToast();
   const [rating, setRating] = useState(0);
+  const [copiedPhoneId, setCopiedPhoneId] = useState<string | null>(null);
+
+  const copyPhoneNumber = (orderId: string, phoneNumber: string | undefined) => {
+    if (!phoneNumber) {
+      toast({
+        title: "Phone number not available",
+        description: "Unable to copy phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    navigator.clipboard.writeText(phoneNumber);
+    setCopiedPhoneId(orderId);
+    toast({
+      title: "Copied!",
+      description: "Phone number copied to clipboard"
+    });
+    setTimeout(() => setCopiedPhoneId(null), 2000);
+  };
   
   const myOrders = user ? getOrdersByCustomer(user.id) : [];
   
@@ -97,22 +117,44 @@ export default function Tracking() {
             )}
 
             {/* Show Tech Info if Accepted/Active */}
-            {order.technicianId && (
-               <div className="flex items-center gap-3 pt-3 border-t border-border/30 mb-3">
-                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                   Tech
-                 </div>
-                 <div className="flex-1">
-                   <p className="text-sm font-medium text-foreground">{t("trackingDetails.technicianAssigned")}</p>
-                   <p className="text-xs text-muted-foreground">{t("trackingDetails.yourExpertOnCase")}</p>
-                 </div>
-                 <Link href={`/chat/${order.id}`}>
-                   <Button size="icon" variant="ghost" className="h-8 w-8 text-primary bg-primary/5 rounded-full">
-                     <MessageSquare className="w-4 h-4" />
-                   </Button>
-                 </Link>
-               </div>
-            )}
+            {order.technicianId && (() => {
+              const technician = getUserById(order.technicianId);
+              return (
+                <div className="flex items-center gap-3 pt-3 border-t border-border/30 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm overflow-hidden">
+                    {technician?.avatar ? (
+                      <img src={technician.avatar} alt={technician.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span>{technician?.name?.charAt(0) || "T"}</span>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">{technician?.name || "Technician"}</p>
+                    <p className="text-xs text-muted-foreground">{t("trackingDetails.yourExpertOnCase")}</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => copyPhoneNumber(order.id, technician?.phone)}
+                      className="h-8 w-8 rounded-full text-primary bg-primary/5 hover:bg-primary/10 transition-colors flex items-center justify-center"
+                      data-testid={`button-copy-phone-${order.id}`}
+                      title="Copy phone number"
+                    >
+                      {copiedPhoneId === order.id ? (
+                        <Check className="w-4 h-4" />
+                      ) : (
+                        <Phone className="w-4 h-4" />
+                      )}
+                    </button>
+                    <Link href={`/chat/${order.id}`}>
+                      <Button size="icon" variant="ghost" className="h-8 w-8 text-primary bg-primary/5 rounded-full">
+                        <MessageSquare className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })()}
+            
 
             {order.status === "completed" && !order.rating && (
               <Dialog>

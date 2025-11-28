@@ -11,6 +11,7 @@ export interface User {
   email: string;
   role: UserRole;
   avatar?: string;
+  phone?: string;
 }
 
 interface AuthContextType {
@@ -20,15 +21,16 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (updatedUser: Partial<User>) => void;
+  getUserById: (userId: string) => User | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Mock Database
 const MOCK_USERS: User[] = [
-  { id: "1", name: "Jane Doe", email: "jane@example.com", role: "customer" },
-  { id: "2", name: "Mike Johnson", email: "mike@semas.com", role: "technician", avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d" },
-  { id: "3", name: "Admin User", email: "admin@semas.com", role: "admin" },
+  { id: "1", name: "Jane Doe", email: "jane@example.com", role: "customer", phone: "+966-50-123-4567" },
+  { id: "2", name: "Mike Johnson", email: "mike@semas.com", role: "technician", avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d", phone: "+966-50-987-6543" },
+  { id: "3", name: "Admin User", email: "admin@semas.com", role: "admin", phone: "+966-50-111-2222" },
 ];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -117,8 +119,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const getUserById = (userId: string) => {
+    return MOCK_USERS.find(u => u.id === userId);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateUser, getUserById }}>
       {children}
     </AuthContext.Provider>
   );

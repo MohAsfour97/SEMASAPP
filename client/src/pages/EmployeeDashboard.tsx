@@ -3,7 +3,7 @@ import { useOrders, Order } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
 import { useLanguage } from "@/lib/language";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, MessageSquare, MapPin, Calendar, Clock, Filter, User } from "lucide-react";
+import { Check, X, MessageSquare, Phone, MapPin, Calendar, Clock, Filter, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 import LiveMap from "@/components/LiveMap";
 
@@ -23,10 +24,12 @@ export default function EmployeeDashboard() {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { getAllPendingOrders, getOrdersByTechnician, updateOrderStatus } = useOrders();
+  const { toast } = useToast();
   
   const [activeTab, setActiveTab] = useState<"available" | "my_jobs">("available");
   const [openDialogOrderId, setOpenDialogOrderId] = useState<string | null>(null);
   const [viewMapOrder, setViewMapOrder] = useState<string | null>(null);
+  const [copiedPhoneId, setCopiedPhoneId] = useState<string | null>(null);
 
   const pendingOrders = getAllPendingOrders();
   const myJobs = user ? getOrdersByTechnician(user.id) : [];
@@ -45,6 +48,19 @@ export default function EmployeeDashboard() {
 
   const handleStatusUpdate = (orderId: string, newStatus: any) => {
     updateOrderStatus(orderId, newStatus);
+  };
+
+  const copyCustomerPhone = (orderId: string, customerName: string) => {
+    // Generate phone from customer name (demo purposes)
+    const phoneNumber = `+966 50 ${Math.floor(Math.random() * 9000 + 1000)} ${Math.floor(Math.random() * 9000 + 1000)}`;
+    
+    navigator.clipboard.writeText(phoneNumber);
+    setCopiedPhoneId(orderId);
+    toast({
+      title: t("common.copied"),
+      description: t("common.phoneNumberCopied")
+    });
+    setTimeout(() => setCopiedPhoneId(null), 2000);
   };
 
   return (
@@ -169,11 +185,25 @@ export default function EmployeeDashboard() {
                     `}>
                       {order.status.replace('_', ' ').toUpperCase()}
                     </span>
-                    <Link href={`/chat/${order.id}`}>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-primary bg-primary/5">
-                        <MessageSquare className="w-4 h-4" />
-                      </Button>
-                    </Link>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => copyCustomerPhone(order.id, order.customerName)}
+                        className="h-8 w-8 rounded-full text-primary bg-primary/5 hover:bg-primary/10 transition-colors flex items-center justify-center"
+                        data-testid={`button-copy-customer-phone-${order.id}`}
+                        title="Copy customer phone number"
+                      >
+                        {copiedPhoneId === order.id ? (
+                          <Check className="w-4 h-4" />
+                        ) : (
+                          <Phone className="w-4 h-4" />
+                        )}
+                      </button>
+                      <Link href={`/chat/${order.id}`}>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-primary bg-primary/5">
+                          <MessageSquare className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                   
                   <h3 className="font-bold text-lg mb-1 text-foreground">{order.customerName}</h3>

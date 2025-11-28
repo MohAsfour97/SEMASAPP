@@ -101,6 +101,46 @@ export default function Tracking() {
                </div>
             )}
 
+            {order.status === "completed" && !order.rating && (
+              <Dialog>
+                <DialogTrigger asChild>
+                   <Button className="w-full mt-3" variant="outline">Rate Service <Star className="w-4 h-4 ml-2 text-yellow-500" /></Button>
+                </DialogTrigger>
+                <DialogContent>
+                   <DialogHeader>
+                      <DialogTitle>Rate Your Experience</DialogTitle>
+                   </DialogHeader>
+                   <div className="py-4 text-center space-y-4">
+                      <p className="text-sm text-muted-foreground">How was your {order.serviceType} service?</p>
+                      <div className="flex justify-center gap-2">
+                         {[1, 2, 3, 4, 5].map((star) => (
+                           <button key={star} onClick={() => setRating(star)} className="focus:outline-none transition-transform active:scale-95">
+                             <Star 
+                               className={`w-8 h-8 ${star <= rating ? "fill-yellow-500 text-yellow-500" : "text-muted-foreground/30"}`} 
+                             />
+                           </button>
+                         ))}
+                      </div>
+                      <Textarea placeholder="Leave a comment (optional)..." className="min-h-[80px]" />
+                      <Button className="w-full" onClick={() => handleRate(order.id)} disabled={rating === 0}>
+                        Submit Rating
+                      </Button>
+                   </div>
+                </DialogContent>
+              </Dialog>
+            )}
+
+            {order.status === "completed" && order.rating && (
+               <div className="mt-3 bg-yellow-50/50 p-2 rounded-lg flex justify-center items-center gap-2 border border-yellow-100">
+                  <span className="text-sm font-medium text-yellow-700">You rated this service:</span>
+                  <div className="flex">
+                    {[...Array(order.rating)].map((_, i) => (
+                       <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                    ))}
+                  </div>
+               </div>
+            )}
+
             {order.status === "pending" && (
               <p className="text-xs text-center text-muted-foreground bg-secondary/20 py-2 rounded-lg">
                 Waiting for technician confirmation...

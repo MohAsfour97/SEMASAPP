@@ -41,10 +41,10 @@ export default function EmployeeDashboard() {
   };
 
   return (
-    <div className="pb-24 pt-6 px-4 max-w-md mx-auto min-h-screen bg-slate-50">
+    <div className="pb-24 pt-6 px-4 max-w-md mx-auto min-h-screen bg-background">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Technician Portal</h1>
+          <h1 className="text-2xl font-bold text-foreground">Technician Portal</h1>
           <p className="text-sm text-muted-foreground">Welcome back, {user?.name}</p>
         </div>
         <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
@@ -78,18 +78,18 @@ export default function EmployeeDashboard() {
               </div>
             ) : (
               pendingOrders.map((order) => (
-                <div key={order.id} className="bg-white p-4 rounded-2xl shadow-sm border border-border/50">
+                <div key={order.id} className="bg-card p-4 rounded-2xl shadow-sm border border-border/50">
                   <div className="flex justify-between items-start mb-2">
                     <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded-md">NEW REQUEST</span>
                     <span className="text-xs text-muted-foreground">{format(new Date(order.date), "MMM d")}</span>
                   </div>
-                  <h3 className="font-bold text-lg mb-1">{order.serviceType}</h3>
+                  <h3 className="font-bold text-lg mb-1 text-foreground">{order.serviceType}</h3>
                   <div className="text-sm text-muted-foreground space-y-1 mb-4">
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4" /> {order.customerName}
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <User className="w-4 h-4" /> <span className="text-foreground">{order.customerName}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" /> {order.address}
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="w-4 h-4" /> <span className="text-foreground">{order.address}</span>
                     </div>
                   </div>
                   
@@ -149,7 +149,7 @@ export default function EmployeeDashboard() {
               </div>
             ) : (
               myJobs.map((order) => (
-                <div key={order.id} className="bg-white p-4 rounded-2xl shadow-sm border border-border/50">
+                <div key={order.id} className="bg-card p-4 rounded-2xl shadow-sm border border-border/50">
                    <div className="flex justify-between items-start mb-3">
                     <span className={`
                       px-2 py-1 rounded-md text-xs font-bold
@@ -167,8 +167,21 @@ export default function EmployeeDashboard() {
                     </Link>
                   </div>
                   
-                  <h3 className="font-bold text-lg mb-1">{order.customerName}</h3>
+                  <h3 className="font-bold text-lg mb-1 text-foreground">{order.customerName}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{order.address}</p>
+                  
+                  {/* Full Details Section for My Jobs */}
+                  <div className="bg-secondary/10 p-3 rounded-lg mb-4 text-sm">
+                    <p className="font-medium text-foreground mb-1">Job Details:</p>
+                    <div className="grid grid-cols-2 gap-2 text-muted-foreground">
+                       <span>Service:</span>
+                       <span className="text-foreground font-medium">{order.serviceType}</span>
+                       <span>Date:</span>
+                       <span className="text-foreground font-medium">{format(new Date(order.date), "MMM d, yyyy")}</span>
+                       <span className="col-span-2 mt-1 block border-t border-border/50 pt-1">Description:</span>
+                       <span className="col-span-2 text-foreground italic">"{order.description}"</span>
+                    </div>
+                  </div>
 
                   {/* Map View Toggle */}
                   {(order.status === 'en_route' || order.status === 'in_progress') && (

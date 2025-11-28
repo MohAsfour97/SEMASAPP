@@ -20,6 +20,7 @@ export interface Order {
   address: string;
   description: string;
   technicianId?: string;
+  rating?: number;
   messages: Message[];
 }
 
@@ -27,6 +28,7 @@ interface OrderContextType {
   orders: Order[];
   createOrder: (order: Omit<Order, "id" | "status" | "messages">) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus, technicianId?: string) => void;
+  rateOrder: (orderId: string, rating: number) => void;
   sendMessage: (orderId: string, senderId: string, text: string) => void;
   getOrdersByCustomer: (customerId: string) => Order[];
   getOrdersByTechnician: (technicianId: string) => Order[];
@@ -90,6 +92,15 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const rateOrder = (orderId: string, rating: number) => {
+    setOrders((prev) => prev.map(order => {
+      if (order.id === orderId) {
+        return { ...order, rating };
+      }
+      return order;
+    }));
+  };
+
   const sendMessage = (orderId: string, senderId: string, text: string) => {
     setOrders((prev) => prev.map(order => {
       if (order.id === orderId) {
@@ -124,7 +135,8 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     <OrderContext.Provider value={{ 
       orders, 
       createOrder, 
-      updateOrderStatus, 
+      updateOrderStatus,
+      rateOrder, 
       sendMessage,
       getOrdersByCustomer,
       getOrdersByTechnician,

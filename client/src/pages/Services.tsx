@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { Shield, Bug, Rat, Search, Check, ArrowRight } from "lucide-react";
+import { Shield, Bug, Rat, Search, Check, ArrowRight, Star } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useOrders } from "@/lib/orders";
 
-const services = [
+const servicesList = [
   {
     id: "general",
     title: "General Pest Control",
@@ -48,6 +49,20 @@ const services = [
 ];
 
 export default function Services() {
+  const { orders } = useOrders();
+
+  const getAverageRating = (serviceType: string) => {
+    const serviceOrders = orders.filter(o => 
+      o.serviceType.toLowerCase().includes(serviceType.toLowerCase().split(" ")[0]) && 
+      o.rating
+    );
+    
+    if (serviceOrders.length === 0) return 4.9; // Default high rating for demo
+    
+    const sum = serviceOrders.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+    return (sum / serviceOrders.length).toFixed(1);
+  };
+
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <div className="mb-6">
@@ -57,11 +72,11 @@ export default function Services() {
 
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-        <Input placeholder="Search services..." className="pl-9 bg-white shadow-sm border-border/60" />
+        <Input placeholder="Search services..." className="pl-9 bg-card shadow-sm border-border/60" />
       </div>
 
       <div className="space-y-4">
-        {services.map((service, index) => (
+        {servicesList.map((service, index) => (
           <motion.div
             key={service.id}
             initial={{ opacity: 0, y: 20 }}
@@ -69,13 +84,19 @@ export default function Services() {
             transition={{ delay: index * 0.1 }}
             className="group"
           >
-            <div className="bg-white rounded-2xl p-5 shadow-sm border border-border/50 hover:shadow-md transition-all relative overflow-hidden">
+            <div className="bg-card rounded-2xl p-5 shadow-sm border border-border/50 hover:shadow-md transition-all relative overflow-hidden">
               <div className="flex items-start gap-4 mb-4">
                 <div className={`w-12 h-12 rounded-xl ${service.bg} flex items-center justify-center ${service.color} shrink-0`}>
                   <service.icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-foreground">{service.title}</h3>
+                  <div className="flex justify-between items-start w-full">
+                     <h3 className="font-bold text-lg text-foreground">{service.title}</h3>
+                     <div className="flex items-center gap-1 bg-yellow-50 px-2 py-0.5 rounded-full border border-yellow-100">
+                        <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+                        <span className="text-xs font-bold text-yellow-700">{getAverageRating(service.title)}</span>
+                     </div>
+                  </div>
                   <p className="text-sm text-muted-foreground leading-relaxed mt-1">{service.description}</p>
                 </div>
               </div>

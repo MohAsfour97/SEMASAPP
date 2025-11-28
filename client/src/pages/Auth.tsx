@@ -2,11 +2,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { useLanguage } from "@/lib/language";
+import { useTheme } from "@/lib/theme";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, ArrowRight, Mail, Lock, User, Loader2, Globe } from "lucide-react";
+import { Shield, ArrowRight, Mail, Lock, User, Loader2, Globe, Moon, Sun } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +19,12 @@ import heroImage from "@assets/generated_images/clean_modern_living_room_interio
 export default function AuthPage() {
   const { login, register, isLoading } = useAuth();
   const { t, language, setLanguage } = useLanguage();
+  const { theme, setTheme } = useTheme();
   const [mode, setMode] = useState<"login" | "register">("login");
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
   
   // Form States
   const [email, setEmail] = useState("");
@@ -47,8 +53,24 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      {/* Language Toggle */}
-      <div className="absolute top-4 right-4 z-40">
+      {/* Language & Theme Toggle */}
+      <div className="absolute top-4 right-4 z-40 flex items-center gap-2">
+        {/* Theme Toggle */}
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={toggleTheme}
+          data-testid="button-theme-toggle-auth"
+          className="p-2"
+        >
+          {theme === "dark" ? (
+            <Sun className="w-4 h-4" />
+          ) : (
+            <Moon className="w-4 h-4" />
+          )}
+        </Button>
+
+        {/* Language Toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 

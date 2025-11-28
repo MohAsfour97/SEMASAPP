@@ -125,7 +125,12 @@ export default function EmployeeDashboard() {
                           </div>
                         </div>
                         <div className="flex gap-3 pt-4">
-                          <Button variant="outline" className="flex-1" onClick={() => setSelectedOrder(null)}>{t("common.cancel")}</Button>
+                          <Button variant="destructive" className="flex-1" onClick={() => {
+                            handleStatusUpdate(order.id, 'cancelled');
+                            setSelectedOrder(null);
+                          }}>
+                            {t("dashboard.decline")}
+                          </Button>
                           <Button className="flex-1 bg-primary" onClick={() => handleAccept(order.id)}>
                             {t("dashboard.accept")}
                           </Button>
@@ -203,25 +208,33 @@ export default function EmployeeDashboard() {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-2">
-                    {order.status === 'accepted' && (
-                      <Button className="col-span-2" onClick={() => handleStatusUpdate(order.id, 'en_route')}>
-                        Start Travel
-                      </Button>
-                    )}
-                    {order.status === 'en_route' && (
-                      <Button className="col-span-2 bg-purple-600 hover:bg-purple-700" onClick={() => handleStatusUpdate(order.id, 'in_progress')}>
-                        Arrived at Site
-                      </Button>
-                    )}
-                    {order.status === 'in_progress' && (
-                      <Button className="col-span-2 bg-green-600 hover:bg-green-700" onClick={() => handleStatusUpdate(order.id, 'completed')}>
-                        Mark Completed
-                      </Button>
-                    )}
-                    {order.status === 'completed' && (
-                      <Button variant="outline" disabled className="col-span-2">
-                        Job Done <Check className="w-4 h-4 ml-2" />
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      {order.status === 'accepted' && (
+                        <Button className="col-span-2" onClick={() => handleStatusUpdate(order.id, 'en_route')}>
+                          Start Travel
+                        </Button>
+                      )}
+                      {order.status === 'en_route' && (
+                        <Button className="col-span-2 bg-purple-600 hover:bg-purple-700" onClick={() => handleStatusUpdate(order.id, 'in_progress')}>
+                          Arrived at Site
+                        </Button>
+                      )}
+                      {order.status === 'in_progress' && (
+                        <Button className="col-span-2 bg-green-600 hover:bg-green-700" onClick={() => handleStatusUpdate(order.id, 'completed')}>
+                          Mark Completed
+                        </Button>
+                      )}
+                      {order.status === 'completed' && (
+                        <Button variant="outline" disabled className="col-span-2">
+                          Job Done <Check className="w-4 h-4 ml-2" />
+                        </Button>
+                      )}
+                    </div>
+                    {(order.status === 'accepted' || order.status === 'en_route' || order.status === 'in_progress') && (
+                      <Button variant="destructive" className="w-full" onClick={() => handleStatusUpdate(order.id, 'cancelled')}>
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel Order
                       </Button>
                     )}
                   </div>

@@ -278,9 +278,9 @@ export const translations = {
     },
     // Home
     home: {
-      pestFree: "خالي من الآفات… وخالي من القلق.",
-      worryFree: "",
-      professional: "راحة بالك مضمونة.",
+      pestFree: "خالي من الآفات…",
+      worryFree: "وخالي من القلق",
+      professional: "معنا راحة بالك مضمونة.",
       bookInspection: "حجز الفحص",
       protected: "محمي",
       rating: "التقييم",

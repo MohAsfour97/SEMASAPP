@@ -278,9 +278,9 @@ export const translations = {
     },
     // Home
     home: {
-      pestFree: "خالي من الآفات.",
-      worryFree: "بلا قلق.",
-      professional: "حماية احترافية لمنزلك وعائلتك. سريع وآمن وفعال.",
+      pestFree: "خالي من الآفات… وخالي من القلق.",
+      worryFree: "",
+      professional: "راحة بالك مضمونة.",
       bookInspection: "حجز الفحص",
       protected: "محمي",
       rating: "التقييم",

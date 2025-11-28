@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useOrders, Order } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
+import { useLanguage } from "@/lib/language";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, MessageSquare, MapPin, Calendar, Clock, Filter, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { format } from "date-fns";
 import LiveMap from "@/components/LiveMap";
 
 export default function EmployeeDashboard() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const { getAllPendingOrders, getOrdersByTechnician, updateOrderStatus } = useOrders();
   
@@ -44,8 +46,8 @@ export default function EmployeeDashboard() {
     <div className="pb-24 pt-6 px-4 max-w-md mx-auto min-h-screen bg-background">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Technician Portal</h1>
-          <p className="text-sm text-muted-foreground">Welcome back, {user?.name}</p>
+          <h1 className="text-2xl font-bold text-foreground">{t("dashboard.technicianPortal")}</h1>
+          <p className="text-sm text-muted-foreground">{t("dashboard.welcomeBack")}, {user?.name}</p>
         </div>
         <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">
           {user?.name[0]}
@@ -55,10 +57,10 @@ export default function EmployeeDashboard() {
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="mb-6">
         <TabsList className="grid grid-cols-2 w-full">
           <TabsTrigger value="available">
-            Available ({pendingOrders.length})
+            {t("dashboard.available")} ({pendingOrders.length})
           </TabsTrigger>
           <TabsTrigger value="my_jobs">
-            My Jobs ({myJobs.length})
+            {t("dashboard.myJobs")} ({myJobs.length})
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -74,13 +76,13 @@ export default function EmployeeDashboard() {
           >
             {pendingOrders.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground">
-                No pending orders available.
+                {t("dashboard.noPendingOrders")}
               </div>
             ) : (
               pendingOrders.map((order) => (
                 <div key={order.id} className="bg-card p-4 rounded-2xl shadow-sm border border-border/50">
                   <div className="flex justify-between items-start mb-2">
-                    <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded-md">NEW REQUEST</span>
+                    <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded-md">{t("dashboard.newRequest")}</span>
                     <span className="text-xs text-muted-foreground">{format(new Date(order.date), "MMM d")}</span>
                   </div>
                   <h3 className="font-bold text-lg mb-1 text-foreground">{order.serviceType}</h3>
@@ -96,36 +98,36 @@ export default function EmployeeDashboard() {
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button className="w-full" onClick={() => setSelectedOrder(order)}>
-                        View Details
+                        {t("dashboard.viewDetails")}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Order Details</DialogTitle>
+                        <DialogTitle>{t("dashboard.orderDetails")}</DialogTitle>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <label className="text-muted-foreground block text-xs mb-1">Customer</label>
+                            <label className="text-muted-foreground block text-xs mb-1">{t("dashboard.customer")}</label>
                             <p className="font-medium">{order.customerName}</p>
                           </div>
                           <div>
-                            <label className="text-muted-foreground block text-xs mb-1">Service</label>
+                            <label className="text-muted-foreground block text-xs mb-1">{t("dashboard.service")}</label>
                             <p className="font-medium">{order.serviceType}</p>
                           </div>
                           <div className="col-span-2">
-                            <label className="text-muted-foreground block text-xs mb-1">Location</label>
+                            <label className="text-muted-foreground block text-xs mb-1">{t("tracking.location")}</label>
                             <p className="font-medium">{order.address}</p>
                           </div>
                           <div className="col-span-2 bg-secondary/50 p-3 rounded-lg">
-                            <label className="text-muted-foreground block text-xs mb-1">Problem Description</label>
+                            <label className="text-muted-foreground block text-xs mb-1">{t("dashboard.problem")}</label>
                             <p className="text-sm">{order.description}</p>
                           </div>
                         </div>
                         <div className="flex gap-3 pt-4">
-                          <Button variant="outline" className="flex-1" onClick={() => setSelectedOrder(null)}>Cancel</Button>
+                          <Button variant="outline" className="flex-1" onClick={() => setSelectedOrder(null)}>{t("common.cancel")}</Button>
                           <Button className="flex-1 bg-primary" onClick={() => handleAccept(order.id)}>
-                            Accept Job
+                            {t("dashboard.accept")}
                           </Button>
                         </div>
                       </div>
@@ -145,7 +147,7 @@ export default function EmployeeDashboard() {
           >
              {myJobs.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground">
-                You haven't accepted any jobs yet.
+                {t("dashboard.noJobsAccepted")}
               </div>
             ) : (
               myJobs.map((order) => (

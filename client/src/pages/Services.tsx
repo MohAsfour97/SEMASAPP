@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Shield, Bug, Rat, Search, Check, ArrowRight, Star } from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOrders } from "@/lib/orders";
@@ -49,6 +50,7 @@ const servicesList = [
 ];
 
 export default function Services() {
+  const { t } = useLanguage();
   const { orders } = useOrders();
 
   const getAverageRating = (serviceType: string) => {
@@ -66,13 +68,13 @@ export default function Services() {
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Our Services</h1>
-        <p className="text-muted-foreground">Professional solutions for every pest problem.</p>
+        <h1 className="text-2xl font-bold mb-2">{t("servicesDetails.ourServices")}</h1>
+        <p className="text-muted-foreground">{t("servicesDetails.professionalSolutions")}</p>
       </div>
 
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-        <Input placeholder="Search services..." className="pl-9 bg-card shadow-sm border-border/60" />
+        <Input placeholder={t("servicesDetails.searchServices")} className="pl-9 bg-card shadow-sm border-border/60" />
       </div>
 
       <div className="space-y-4">
@@ -112,7 +114,7 @@ export default function Services() {
 
               <div className="flex items-center justify-between pl-16 mt-4 border-t border-border/50 pt-4">
                 <div>
-                  <span className="text-xs text-muted-foreground block">Starting at</span>
+                  <span className="text-xs text-muted-foreground block">{t("servicesDetails.startingAt")}</span>
                   <span className="text-xl font-bold text-primary">{service.price}</span>
                 </div>
                 <Link 
@@ -122,7 +124,7 @@ export default function Services() {
                   }}
                 >
                   <Button size="sm" className="rounded-full px-4 group-hover:bg-primary group-hover:text-white transition-colors">
-                    Book Now <ArrowRight className="w-4 h-4 ml-1" />
+                    {t("servicesDetails.bookNow")} <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </Link>
               </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
+import { useLanguage } from "@/lib/language";
 import { useOrders } from "@/lib/orders";
 import { Send, ArrowLeft, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 export default function Chat() {
+  const { t } = useLanguage();
   const [, params] = useRoute("/chat/:orderId");
   const orderId = params?.orderId;
   const [, setLocation] = useLocation();
@@ -26,7 +28,7 @@ export default function Chat() {
     }
   }, [order?.messages]);
 
-  if (!order) return <div>Order not found</div>;
+  if (!order) return <div>{t("common.noOrderFound")}</div>;
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ export default function Chat() {
   };
 
   const recipientName = user?.role === "customer" 
-    ? "Technician" 
+    ? t("common.technician") 
     : order.customerName;
 
   return (
@@ -52,7 +54,7 @@ export default function Chat() {
         </div>
         <div>
           <h2 className="font-bold text-sm">{recipientName}</h2>
-          <p className="text-xs text-muted-foreground">Order #{order.id.slice(-4)}</p>
+          <p className="text-xs text-muted-foreground">{t("common.orderNumber")} #{order.id.slice(-4)}</p>
         </div>
       </div>
 
@@ -60,7 +62,7 @@ export default function Chat() {
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background" ref={scrollRef}>
         {order.messages.length === 0 ? (
           <div className="text-center text-muted-foreground text-sm mt-10">
-            <p>Start the conversation with your {user?.role === "customer" ? "technician" : "customer"}.</p>
+            <p>{t("common.startConversation")} {user?.role === "customer" ? t("common.technician") : t("common.customer")}.</p>
           </div>
         ) : (
           order.messages.map((msg) => {
@@ -88,7 +90,7 @@ export default function Chat() {
         <Input 
           value={text} 
           onChange={(e) => setText(e.target.value)} 
-          placeholder="Type a message..." 
+          placeholder={t("chat.typeMessage")} 
           className="flex-1 rounded-full bg-secondary/20 border-transparent focus:bg-white transition-all"
         />
         <Button type="submit" size="icon" className="rounded-full w-10 h-10 shrink-0" disabled={!text.trim()}>

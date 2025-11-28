@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar as CalendarIcon, MapPin, Check, CreditCard, ChevronLeft, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,7 @@ const serviceMap: Record<string, string> = {
 };
 
 export default function Booking() {
+  const { t } = useLanguage();
   const [step, setStep] = useState(1);
   const [location] = useLocation();
   const [, setLocation] = useLocation();
@@ -67,8 +69,8 @@ export default function Booking() {
   const handleNext = () => {
     if (step === 2 && !time) {
       toast({
-        title: "Select Time",
-        description: "Please select a time slot to continue.",
+        title: t("booking.selectTime"),
+        description: t("bookingDetails.selectTimeFirst"),
         variant: "destructive"
       });
       return;
@@ -102,8 +104,8 @@ export default function Booking() {
 
       setLoading(false);
       toast({
-        title: "Booking Confirmed!",
-        description: "Your request has been sent to our technicians.",
+        title: t("booking.bookingConfirmed"),
+        description: t("bookingDetails.requestSent"),
       });
       setLocation("/track");
     }, 1500);
@@ -119,8 +121,8 @@ export default function Booking() {
           </Button>
         )}
         <div>
-          <h1 className="text-2xl font-bold">Book Service</h1>
-          <p className="text-sm text-muted-foreground">Step {step} of 4: {steps[step-1].title}</p>
+          <h1 className="text-2xl font-bold">{t("bookingDetails.bookService")}</h1>
+          <p className="text-sm text-muted-foreground">{t("bookingDetails.step")} {step} {t("bookingDetails.of")} 4: {steps[step-1].title}</p>
         </div>
       </div>
 
@@ -147,7 +149,7 @@ export default function Booking() {
               className="space-y-6"
             >
               <div className="space-y-4">
-                <Label className="text-base">Select Service Type</Label>
+                <Label className="text-base">{t("bookingDetails.selectServiceType")}</Label>
                 <RadioGroup value={serviceType} onValueChange={setServiceType} className="grid gap-4">
                   {['General Pest Control', 'Termite Inspection', 'Rodent Control', 'Bed Bug Treatment'].map((type) => (
                     <div key={type}>

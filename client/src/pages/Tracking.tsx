@@ -1,5 +1,6 @@
 import { useOrders } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
+import { useLanguage } from "@/lib/language";
 import { motion } from "framer-motion";
 import { Clock, MapPin, CheckCircle2, MessageSquare, ChevronRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import LiveMap from "@/components/LiveMap";
 
 export default function Tracking() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const { getOrdersByCustomer, rateOrder } = useOrders();
   const { toast } = useToast();
@@ -22,7 +24,7 @@ export default function Tracking() {
   
   const handleRate = (orderId: string) => {
     rateOrder(orderId, rating);
-    toast({ title: "Thanks for your feedback!", description: "We appreciate your rating." });
+    toast({ title: t("common.success"), description: t("common.success") });
   };
   
   // Sort by date (newest first)
@@ -34,10 +36,10 @@ export default function Tracking() {
         <div className="w-20 h-20 bg-secondary/50 rounded-full flex items-center justify-center mb-4">
           <Clock className="w-10 h-10 text-primary" />
         </div>
-        <h2 className="text-xl font-bold mb-2">No Orders Yet</h2>
-        <p className="text-muted-foreground mb-6">Book your first pest control service to see tracking details here.</p>
+        <h2 className="text-xl font-bold mb-2">{t("trackingDetails.noOrdersYet")}</h2>
+        <p className="text-muted-foreground mb-6">{t("trackingDetails.bookFirstService")}</p>
         <Link href="/book">
-          <Button className="rounded-full px-8">Book Now</Button>
+          <Button className="rounded-full px-8">{t("booking.book")}</Button>
         </Link>
       </div>
     );
@@ -45,7 +47,7 @@ export default function Tracking() {
 
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto min-h-screen bg-background">
-      <h1 className="text-2xl font-bold mb-6">My Orders</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("trackingDetails.myOrders")}</h1>
 
       <div className="space-y-4">
         {sortedOrders.map((order, index) => (
@@ -101,8 +103,8 @@ export default function Tracking() {
                    Tech
                  </div>
                  <div className="flex-1">
-                   <p className="text-sm font-medium text-foreground">Technician Assigned</p>
-                   <p className="text-xs text-muted-foreground">Your expert is on the case</p>
+                   <p className="text-sm font-medium text-foreground">{t("trackingDetails.technicianAssigned")}</p>
+                   <p className="text-xs text-muted-foreground">{t("trackingDetails.yourExpertOnCase")}</p>
                  </div>
                  <Link href={`/chat/${order.id}`}>
                    <Button size="icon" variant="ghost" className="h-8 w-8 text-primary bg-primary/5 rounded-full">
@@ -115,14 +117,14 @@ export default function Tracking() {
             {order.status === "completed" && !order.rating && (
               <Dialog>
                 <DialogTrigger asChild>
-                   <Button className="w-full mt-3" variant="outline">Rate Service <Star className="w-4 h-4 ml-2 text-yellow-500" /></Button>
+                   <Button className="w-full mt-3" variant="outline">{t("tracking.rateService")} <Star className="w-4 h-4 ml-2 text-yellow-500" /></Button>
                 </DialogTrigger>
                 <DialogContent>
                    <DialogHeader>
-                      <DialogTitle>Rate Your Experience</DialogTitle>
+                      <DialogTitle>{t("trackingDetails.rateYourExperience")}</DialogTitle>
                    </DialogHeader>
                    <div className="py-4 text-center space-y-4">
-                      <p className="text-sm text-muted-foreground">How was your {order.serviceType} service?</p>
+                      <p className="text-sm text-muted-foreground">{t("trackingDetails.howWasService")} {order.serviceType}?</p>
                       <div className="flex justify-center gap-2">
                          {[1, 2, 3, 4, 5].map((star) => (
                            <button key={star} onClick={() => setRating(star)} className="focus:outline-none transition-transform active:scale-95">
@@ -132,9 +134,9 @@ export default function Tracking() {
                            </button>
                          ))}
                       </div>
-                      <Textarea placeholder="Leave a comment (optional)..." className="min-h-[80px]" />
+                      <Textarea placeholder={t("trackingDetails.leaveComment")} className="min-h-[80px]" />
                       <Button className="w-full" onClick={() => handleRate(order.id)} disabled={rating === 0}>
-                        Submit Rating
+                        {t("trackingDetails.submitRating")}
                       </Button>
                    </div>
                 </DialogContent>
@@ -143,7 +145,7 @@ export default function Tracking() {
 
             {order.status === "completed" && order.rating && (
                <div className="mt-3 bg-yellow-50/50 p-2 rounded-lg flex justify-center items-center gap-2 border border-yellow-100">
-                  <span className="text-sm font-medium text-yellow-700">You rated this service:</span>
+                  <span className="text-sm font-medium text-yellow-700">{t("trackingDetails.youRatedThis")}</span>
                   <div className="flex">
                     {[...Array(order.rating)].map((_, i) => (
                        <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
@@ -154,7 +156,7 @@ export default function Tracking() {
 
             {order.status === "pending" && (
               <p className="text-xs text-center text-muted-foreground bg-secondary/20 py-2 rounded-lg">
-                Waiting for technician confirmation...
+                {t("bookingDetails.waitingForTechnician")}
               </p>
             )}
           </motion.div>

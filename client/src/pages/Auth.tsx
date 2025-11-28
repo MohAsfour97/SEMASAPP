@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth";
+import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ import heroImage from "@assets/generated_images/clean_modern_living_room_interio
 
 export default function AuthPage() {
   const { login, register, isLoading } = useAuth();
+  const { t } = useLanguage();
   const [mode, setMode] = useState<"login" | "register">("login");
   
   // Form States
@@ -57,15 +59,15 @@ export default function AuthPage() {
             <Shield className="w-8 h-8" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-1">SEMAS</h1>
-          <p className="text-muted-foreground/80">Your home, protected.</p>
+          <p className="text-muted-foreground/80">{t("common.loading")}</p>
         </div>
 
         {/* Auth Card */}
         <div className="bg-card/95 backdrop-blur-xl border border-border/20 shadow-xl rounded-3xl p-6 flex-1 flex flex-col">
           <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "register")} className="w-full mb-6">
             <TabsList className="grid w-full grid-cols-2 mb-4">
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="register">Sign Up</TabsTrigger>
+              <TabsTrigger value="login">{t("auth.signIn")}</TabsTrigger>
+              <TabsTrigger value="register">{t("auth.signUp")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -80,7 +82,7 @@ export default function AuthPage() {
             >
               {mode === "register" && (
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">{t("auth.name")}</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input 
@@ -96,7 +98,7 @@ export default function AuthPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">{t("auth.email")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input 
@@ -112,7 +114,7 @@ export default function AuthPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("auth.password")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input 
@@ -132,9 +134,9 @@ export default function AuthPage() {
                   {isLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : mode === "login" ? (
-                    <>Sign In <ArrowRight className="ml-2 w-5 h-5" /></>
+                    <>{t("auth.signIn")} <ArrowRight className="ml-2 w-5 h-5" /></>
                   ) : (
-                    <>Create Account <ArrowRight className="ml-2 w-5 h-5" /></>
+                    <>{t("auth.createAccount")} <ArrowRight className="ml-2 w-5 h-5" /></>
                   )}
                 </Button>
               </div>
@@ -143,7 +145,7 @@ export default function AuthPage() {
 
           {/* Demo Logins */}
           <div className="mt-6 pt-6 border-t border-border/50">
-            <p className="text-xs text-center text-muted-foreground mb-3">Try demo accounts:</p>
+            <p className="text-xs text-center text-muted-foreground mb-3">{t("common.loading")}</p>
             <div className="grid grid-cols-2 gap-3">
               <Button 
                 variant="outline" 

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, ProtectedRoute, useAuth } from "@/lib/auth";
 import { OrderProvider } from "@/lib/orders";
 import { ThemeProvider } from "@/lib/theme";
+import { LanguageProvider } from "@/lib/language";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Services from "@/pages/Services";
@@ -54,17 +55,19 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="pestguard-ui-theme">
-        <TooltipProvider>
-          <AuthProvider>
-            <OrderProvider>
-              <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
-                <Router />
-                <NavigationWrapper />
-                <Toaster />
-              </div>
-            </OrderProvider>
-          </AuthProvider>
-        </TooltipProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <AuthProvider>
+              <OrderProvider>
+                <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
+                  <Router />
+                  <NavigationWrapper />
+                  <Toaster />
+                </div>
+              </OrderProvider>
+            </AuthProvider>
+          </TooltipProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

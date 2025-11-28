@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { Shield, Clock, Star, CheckCircle, ArrowRight, Phone } from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@assets/generated_images/clean_modern_living_room_interior.png";
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <div className="pb-24">
       {/* Hero Section */}
@@ -21,13 +23,13 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-bold mb-2">Pest Free.<br/>Worry Free.</h1>
+            <h1 className="text-3xl font-bold mb-2">{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
             <p className="text-white/90 text-sm mb-4 max-w-[80%]">
-              Professional protection for your home and family. Fast, safe, and effective.
+              {t("home.professional")}
             </p>
             <Link href="/book">
               <Button className="bg-primary text-white hover:bg-primary/90 rounded-full px-6 shadow-lg shadow-primary/25 border-none">
-                Book Inspection
+                {t("home.bookInspection")}
               </Button>
             </Link>
           </motion.div>
@@ -41,21 +43,21 @@ export default function Home() {
             <div className="bg-secondary/50 p-2 rounded-full mb-2">
               <Shield className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-xs font-medium text-muted-foreground">Protected</span>
+            <span className="text-xs font-medium text-muted-foreground">{t("home.protected")}</span>
             <span className="text-lg font-bold text-foreground">365d</span>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-orange-100 p-2 rounded-full mb-2">
               <Star className="w-5 h-5 text-orange-500" />
             </div>
-            <span className="text-xs font-medium text-muted-foreground">Rating</span>
+            <span className="text-xs font-medium text-muted-foreground">{t("home.rating")}</span>
             <span className="text-lg font-bold text-foreground">4.9</span>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-blue-100 p-2 rounded-full mb-2">
               <Clock className="w-5 h-5 text-blue-500" />
             </div>
-            <span className="text-xs font-medium text-muted-foreground">Arrival</span>
+            <span className="text-xs font-medium text-muted-foreground">{t("home.arrival")}</span>
             <span className="text-lg font-bold text-foreground">&lt;24h</span>
           </div>
         </div>
@@ -63,9 +65,9 @@ export default function Home() {
         {/* Active Order */}
         <section>
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold">Active Service</h2>
+            <h2 className="text-lg font-semibold">{t("home.activeService")}</h2>
             <Link href="/track">
-              <span className="text-primary text-sm font-medium cursor-pointer">Track</span>
+              <span className="text-primary text-sm font-medium cursor-pointer">{t("home.track")}</span>
             </Link>
           </div>
           <Card className="overflow-hidden border-none shadow-md bg-card relative">

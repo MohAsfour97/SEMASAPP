@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, Clock, Star, CheckCircle, ArrowRight, Phone } from "lucide-react";
+import { Shield, Clock, Star, CheckCircle, ArrowRight, Phone, MessageCircle } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language";
@@ -227,6 +227,49 @@ export default function Home() {
               <p className="font-semibold text-foreground mb-2">{t("home.office")}</p>
               <p className="text-sm text-muted-foreground">Riyadh, Saudi Arabia</p>
             </div>
+          </div>
+        </section>
+
+        {/* Quick Contact Section */}
+        <section data-testid="section-quick-contact">
+          <h2 className="text-lg font-semibold mb-4">{t("home.quickContact")}</h2>
+          <div className="flex gap-4 justify-center">
+            {/* WhatsApp Button */}
+            <a 
+              href="https://wa.me/966"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="button-whatsapp"
+            >
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border border-green-200 dark:border-green-800 shadow-sm hover:shadow-lg transition-all cursor-pointer"
+              >
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center">
+                  <Phone className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-xs font-semibold text-green-700 dark:text-green-300">{t("home.whatsapp")}</span>
+              </motion.div>
+            </a>
+
+            {/* Send Inquiry Button */}
+            <button 
+              onClick={() => alert("Inquiry form would open here")}
+              data-testid="button-inquiry"
+              className="group"
+            >
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border border-blue-200 dark:border-blue-800 shadow-sm hover:shadow-lg transition-all"
+              >
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">{t("home.sendInquiry")}</span>
+              </motion.div>
+            </button>
           </div>
         </section>
       </div>

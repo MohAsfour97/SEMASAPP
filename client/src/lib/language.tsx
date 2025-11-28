@@ -32,6 +32,10 @@ export const translations = {
       visitUs: "Visit Us",
       findUsRiyadh: "Find our office in Riyadh, Saudi Arabia",
       office: "SEMAS Office",
+      contactUs: "Contact Us",
+      whatsapp: "WhatsApp",
+      sendInquiry: "Send Inquiry",
+      quickContact: "Quick Contact",
     },
     // Navigation
     nav: {
@@ -304,6 +308,10 @@ export const translations = {
       visitUs: "تفضل بزيارتنا",
       findUsRiyadh: "ابحث عن مكتبنا في الرياض، المملكة العربية السعودية",
       office: "مكتب SEMAS",
+      contactUs: "تواصل معنا",
+      whatsapp: "واتساب",
+      sendInquiry: "إرسال استفسار",
+      quickContact: "تواصل سريع",
     },
     // Navigation
     nav: {

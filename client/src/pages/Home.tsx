@@ -2,12 +2,20 @@ import { motion } from "framer-motion";
 import { Shield, Clock, Star, CheckCircle, ArrowRight, Phone } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/language";
+import { useAuth } from "@/lib/auth";
+import { useOrders } from "@/lib/orders";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@assets/generated_images/clean_modern_living_room_interior.png";
 
 export default function Home() {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const { getOrdersByCustomer } = useOrders();
+  
+  // Get customer's active order (non-completed, non-cancelled)
+  const customerOrders = user ? getOrdersByCustomer(user.id) : [];
+  const activeOrder = customerOrders.find(o => o.status !== 'completed' && o.status !== 'cancelled') || null;
   return (
     <div className="pb-24">
       {/* Hero Section */}
@@ -70,33 +78,52 @@ export default function Home() {
               <span className="text-primary text-sm font-medium cursor-pointer" data-testid="link-track-order">{t("home.track")}</span>
             </Link>
           </div>
-          <Card className="overflow-hidden border-none shadow-md bg-card relative" data-testid="card-active-service">
-            <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-            <CardContent className="p-4" data-testid="content-active-service">
-              <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className="font-semibold text-foreground" data-testid="text-service-name">Quarterly Maintenance</h3>
-                  <p className="text-sm text-muted-foreground" data-testid="text-service-time">{t("home.serviceTime") || "Today, 2:00 PM - 4:00 PM"}</p>
+          {activeOrder ? (
+            <Card className="overflow-hidden border-none shadow-md bg-card relative" data-testid="card-active-service">
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
+              <CardContent className="p-4" data-testid="content-active-service">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 className="font-semibold text-foreground" data-testid="text-service-name">{activeOrder.serviceType}</h3>
+                    <p className="text-sm text-muted-foreground" data-testid="text-service-time">{t("home.serviceTime")}</p>
+                  </div>
+                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                    activeOrder.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                    activeOrder.status === 'accepted' ? 'bg-blue-100 text-blue-700' :
+                    activeOrder.status === 'en_route' ? 'bg-purple-100 text-purple-700' :
+                    'bg-orange-100 text-orange-700'
+                  }`} data-testid="badge-status">
+                    {activeOrder.status.replace('_', ' ').toUpperCase()}
+                  </span>
                 </div>
-                <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full" data-testid="badge-status">
-                  {t("home.enRoute")}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 pt-3 border-t border-border/50">
-                <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
-                  {/* Placeholder for tech avatar if we had a small one, or use icon */}
-                  <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" alt="Tech" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium" data-testid="text-technician-name">Mike Johnson</p>
-                  <p className="text-xs text-muted-foreground" data-testid="text-technician-role">{t("common.technician")}</p>
-                </div>
-                <Button size="icon" variant="ghost" className="rounded-full h-8 w-8 text-primary bg-primary/5">
-                  <Phone className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                {activeOrder.technicianId && (
+                  <div className="flex items-center gap-3 pt-3 border-t border-border/50">
+                    <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+                      <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" alt="Tech" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium" data-testid="text-technician-name">Technician</p>
+                      <p className="text-xs text-muted-foreground" data-testid="text-technician-role">{t("common.technician")}</p>
+                    </div>
+                    <Link href={`/chat/${activeOrder.id}`}>
+                      <Button size="icon" variant="ghost" className="rounded-full h-8 w-8 text-primary bg-primary/5">
+                        <Phone className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="overflow-hidden border-none shadow-md bg-card relative" data-testid="card-active-service">
+              <CardContent className="p-4 text-center text-muted-foreground">
+                <p>{t("trackingDetails.noOrdersYet")}</p>
+                <Link href="/book">
+                  <Button className="mt-3 bg-primary text-white">{t("booking.book")}</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
         </section>
 
         {/* Popular Services */}
@@ -109,8 +136,8 @@ export default function Home() {
           </div>
           <div className="space-y-3">
             {[
-              { name: "Termite Inspection", price: "$99", icon: Shield },
-              { name: "General Pest Control", price: "$149", icon: CheckCircle },
+              { id: "termite", name: "Termite Inspection", price: "$99", icon: Shield },
+              { id: "general", name: "General Pest Control", price: "$149", icon: CheckCircle },
             ].map((service, i) => (
               <motion.div 
                 key={i}
@@ -118,18 +145,20 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="border-border/50 shadow-sm hover:shadow-md transition-all active:scale-[0.99]">
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/30 flex items-center justify-center text-primary">
-                      <service.icon className="w-6 h-6" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-foreground">{service.name}</h3>
-                      <p className="text-sm text-muted-foreground">Starting at {service.price}</p>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground/50" />
-                  </CardContent>
-                </Card>
+                <Link href={`/book?service=${service.id}`}>
+                  <Card className="border-border/50 shadow-sm hover:shadow-md transition-all active:scale-[0.99] cursor-pointer" data-testid={`card-service-${service.id}`}>
+                    <CardContent className="p-4 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-secondary/30 flex items-center justify-center text-primary">
+                        <service.icon className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-foreground">{service.name}</h3>
+                        <p className="text-sm text-muted-foreground">Starting at {service.price}</p>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground/50" />
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
             ))}
           </div>

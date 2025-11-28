@@ -10,12 +10,15 @@ import heroImage from "@assets/generated_images/clean_modern_living_room_interio
 
 export default function Home() {
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
   
   // Get customer's active order (non-completed, non-cancelled)
   const customerOrders = user ? getOrdersByCustomer(user.id) : [];
   const activeOrder = customerOrders.find(o => o.status !== 'completed' && o.status !== 'cancelled') || null;
+  
+  // Get technician data if order has one assigned
+  const technician = activeOrder?.technicianId ? getUserById(activeOrder.technicianId) : null;
   return (
     <div className="pb-24">
       {/* Hero Section */}
@@ -96,13 +99,17 @@ export default function Home() {
                     {activeOrder.status.replace('_', ' ').toUpperCase()}
                   </span>
                 </div>
-                {activeOrder.technicianId && (
+                {technician && (
                   <div className="flex items-center gap-3 pt-3 border-t border-border/50">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
-                      <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" alt="Tech" className="w-full h-full object-cover" />
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs overflow-hidden">
+                      {technician.avatar ? (
+                        <img src={technician.avatar} alt={technician.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{technician.name?.charAt(0) || "T"}</span>
+                      )}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium" data-testid="text-technician-name">Technician</p>
+                      <p className="text-sm font-medium" data-testid="text-technician-name">{technician.name}</p>
                       <p className="text-xs text-muted-foreground" data-testid="text-technician-role">{t("common.technician")}</p>
                     </div>
                     <Link href={`/chat/${activeOrder.id}`}>

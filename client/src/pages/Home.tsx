@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { useOrders } from "@/lib/orders";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import heroImage from "@assets/generated_images/clean_modern_living_room_interior.png";
+import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
 
 export default function Home() {
   const { t } = useLanguage();

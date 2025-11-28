@@ -37,7 +37,7 @@ export default function Home() {
             <h1 className="text-4xl font-bold mb-2" style={{ 
               color: '#ffffff',
               WebkitTextStroke: '0.5px #2dd4bf',
-              textShadow: '0 0 15px #2dd4bf, 0 0 25px #14b8a6',
+              textShadow: '0 0 10px #2dd4bf, 0 0 18px #14b8a6',
               paintOrder: 'stroke fill'
             }}>{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
             <p className="text-white/90 text-base mb-4 max-w-[80%]">

@@ -207,6 +207,28 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {/* Visit Us Section */}
+        <section data-testid="section-visit-us">
+          <h2 className="text-lg font-semibold mb-3">{t("home.visitUs")}</h2>
+          <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden">
+            <p className="text-sm text-muted-foreground p-4 pb-2">{t("home.findUsRiyadh")}</p>
+            <div className="w-full h-64 relative">
+              <iframe
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                src="https://www.openstreetmap.org/export/embed.html?bbox=46.5753,24.6734,46.7753,24.7536&layer=mapnik&marker=24.7136,46.6753"
+                loading="lazy"
+                data-testid="map-semas-office"
+              />
+            </div>
+            <div className="p-4 border-t border-border/30">
+              <p className="font-semibold text-foreground mb-2">{t("home.office")}</p>
+              <p className="text-sm text-muted-foreground">Riyadh, Saudi Arabia</p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

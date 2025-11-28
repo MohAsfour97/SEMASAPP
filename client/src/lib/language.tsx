@@ -29,6 +29,9 @@ export const translations = {
       viewAll: "View All",
       enRoute: "En Route",
       serviceTime: "09:00 AM - 11:00 AM",
+      visitUs: "Visit Us",
+      findUsRiyadh: "Find our office in Riyadh, Saudi Arabia",
+      office: "SEMAS Office",
     },
     // Navigation
     nav: {
@@ -294,6 +297,9 @@ export const translations = {
       viewAll: "عرض الكل",
       enRoute: "في الطريق",
       serviceTime: "09:00 صباحاً - 11:00 صباحاً",
+      visitUs: "زيارتنا",
+      findUsRiyadh: "ابحث عن مكتبنا في الرياض، المملكة العربية السعودية",
+      office: "مكتب SEMAS",
     },
     // Navigation
     nav: {

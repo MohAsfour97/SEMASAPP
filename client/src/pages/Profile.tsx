@@ -1,19 +1,26 @@
 import { User, Bell, Settings, Shield, LogOut, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/lib/auth";
 
 export default function Profile() {
+  const { user, logout } = useAuth();
+
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-6">My Profile</h1>
 
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold">
-          JD
+        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold overflow-hidden">
+          {user?.avatar ? (
+            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+          ) : (
+            <span>{user?.name?.charAt(0) || "U"}</span>
+          )}
         </div>
         <div>
-          <h2 className="text-xl font-bold">John Doe</h2>
-          <p className="text-muted-foreground text-sm">Premium Member</p>
+          <h2 className="text-xl font-bold">{user?.name || "User"}</h2>
+          <p className="text-muted-foreground text-sm capitalize">{user?.role || "Member"}</p>
         </div>
       </div>
 
@@ -55,7 +62,11 @@ export default function Profile() {
           </div>
         </section>
 
-        <Button variant="destructive" className="w-full rounded-xl h-12 gap-2">
+        <Button 
+          variant="destructive" 
+          className="w-full rounded-xl h-12 gap-2"
+          onClick={logout}
+        >
           <LogOut className="w-4 h-4" /> Sign Out
         </Button>
       </div>

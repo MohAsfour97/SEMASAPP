@@ -54,27 +54,27 @@ export default function Services() {
   const { t, language } = useLanguage();
   const { orders } = useOrders();
   const [searchQuery, setSearchQuery] = useState("");
-  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
-  const cardRefs = useRef<Map<string, IntersectionObserver>>(new Map());
+  const [animatedCards, setAnimatedCards] = useState<Set<string>>(new Set());
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const servicesList = getServicesList(t);
 
   useEffect(() => {
     const observerOptions = {
-      threshold: 0.2,
-      rootMargin: "0px 0px -50px 0px"
+      threshold: 0.15,
+      rootMargin: "50px 0px 50px 0px"
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    observerRef.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setVisibleCards(prev => new Set(prev).add(entry.target.id));
+          setAnimatedCards(prev => new Set(prev).add(entry.target.id));
         }
       });
     }, observerOptions);
 
     return () => {
-      cardRefs.current.forEach(obs => obs.disconnect());
+      observerRef.current?.disconnect();
     };
   }, []);
 
@@ -157,17 +157,12 @@ export default function Services() {
             key={service.id}
             id={`card-${service.id}`}
             ref={(el) => {
-              if (el) {
-                const observer = new IntersectionObserver(([entry]) => {
-                  if (entry.isIntersecting) {
-                    setVisibleCards(prev => new Set(prev).add(service.id));
-                  }
-                }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" });
-                observer.observe(el);
+              if (el && observerRef.current) {
+                observerRef.current.observe(el);
               }
             }}
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={visibleCards.has(service.id) ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.95 }}
+            animate={animatedCards.has(service.id) ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
             className="group"
           >
@@ -215,8 +210,8 @@ export default function Services() {
                       key={i} 
                       className="flex items-center gap-3"
                       initial={{ opacity: 0, x: -10 }}
-                      animate={visibleCards.has(service.id) ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                      transition={{ delay: visibleCards.has(service.id) ? 0.2 + i * 0.1 : 0 }}
+                      animate={animatedCards.has(service.id) ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                      transition={{ delay: animatedCards.has(service.id) ? 0.2 + i * 0.1 : 0 }}
                     >
                       <Check className="w-5 h-5 text-primary flex-shrink-0" />
                       <span className="text-sm text-foreground/90">{t(featureKey)}</span>

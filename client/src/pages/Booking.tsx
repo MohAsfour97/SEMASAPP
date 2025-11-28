@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { useOrders } from "@/lib/orders";
+import { useAuth } from "@/lib/auth";
 
 const steps = [
   { id: 1, title: "Service Details" },
@@ -22,8 +24,16 @@ export default function Booking() {
   const [step, setStep] = useState(1);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const { createOrder } = useOrders();
+  const { user } = useAuth();
+  
   const [loading, setLoading] = useState(false);
+
+  // Form State
+  const [serviceType, setServiceType] = useState("General Pest Control");
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [address, setAddress] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleNext = () => {
     if (step < 4) {
@@ -38,16 +48,27 @@ export default function Booking() {
   };
 
   const handleBooking = () => {
+    if (!user) return;
+    
     setLoading(true);
-    // Simulate API call
+    
     setTimeout(() => {
+      createOrder({
+        customerId: user.id,
+        customerName: user.name,
+        serviceType,
+        date: date || new Date(),
+        address: address || "123 Main St", // Fallback for demo
+        description: description || "No description provided",
+      });
+
       setLoading(false);
       toast({
         title: "Booking Confirmed!",
-        description: "Your pest control expert has been scheduled.",
+        description: "Your request has been sent to our technicians.",
       });
       setLocation("/track");
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -89,35 +110,15 @@ export default function Booking() {
             >
               <div className="space-y-4">
                 <Label className="text-base">Select Service Type</Label>
-                <RadioGroup defaultValue="general" className="grid gap-4">
+                <RadioGroup value={serviceType} onValueChange={setServiceType} className="grid gap-4">
                   {['General Pest Control', 'Termite Inspection', 'Rodent Control', 'Bed Bug Treatment'].map((type) => (
                     <div key={type}>
-                      <RadioGroupItem value={type.toLowerCase()} id={type} className="peer sr-only" />
+                      <RadioGroupItem value={type} id={type} className="peer sr-only" />
                       <Label
                         htmlFor={type}
                         className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-accent/5 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all"
                       >
                         <span className="text-sm font-medium">{type}</span>
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-
-              <div className="space-y-4">
-                <Label className="text-base">Property Size</Label>
-                <RadioGroup defaultValue="medium" className="grid grid-cols-3 gap-4">
-                  {['Small', 'Medium', 'Large'].map((size) => (
-                    <div key={size}>
-                      <RadioGroupItem value={size.toLowerCase()} id={size} className="peer sr-only" />
-                      <Label
-                        htmlFor={size}
-                        className="flex flex-col items-center justify-center rounded-xl border-2 border-muted bg-white p-3 hover:bg-accent/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all text-center"
-                      >
-                        <span className="text-sm font-medium">{size}</span>
-                        <span className="text-[10px] text-muted-foreground mt-1">
-                          {size === 'Small' ? '<1000 sqft' : size === 'Medium' ? '1-2500 sqft' : '2500+ sqft'}
-                        </span>
                       </Label>
                     </div>
                   ))}
@@ -167,18 +168,28 @@ export default function Booking() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Full Name</Label>
-                  <Input placeholder="John Doe" className="bg-white h-12 rounded-xl" />
+                  <Input defaultValue={user?.name} disabled className="bg-white h-12 rounded-xl opacity-75" />
                 </div>
                 <div className="space-y-2">
                   <Label>Address</Label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <Input placeholder="123 Green Street" className="pl-10 bg-white h-12 rounded-xl" />
+                    <Input 
+                      value={address} 
+                      onChange={(e) => setAddress(e.target.value)} 
+                      placeholder="123 Green Street" 
+                      className="pl-10 bg-white h-12 rounded-xl" 
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Problem Description</Label>
-                  <Textarea placeholder="Describe the pests you've seen..." className="bg-white rounded-xl min-h-[120px]" />
+                  <Textarea 
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)} 
+                    placeholder="Describe the pests you've seen..." 
+                    className="bg-white rounded-xl min-h-[120px]" 
+                  />
                 </div>
               </div>
             </motion.div>
@@ -197,7 +208,7 @@ export default function Booking() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-muted-foreground">
                     <span>Service</span>
-                    <span className="text-foreground font-medium">General Control</span>
+                    <span className="text-foreground font-medium">{serviceType}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Date</span>

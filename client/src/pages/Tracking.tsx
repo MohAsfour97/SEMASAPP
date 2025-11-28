@@ -1,98 +1,102 @@
+import { useOrders } from "@/lib/orders";
+import { useAuth } from "@/lib/auth";
 import { motion } from "framer-motion";
-import { Phone, MessageSquare, MapPin, CheckCircle2, Clock } from "lucide-react";
+import { Clock, MapPin, CheckCircle2, MessageSquare, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import techImage from "@assets/generated_images/friendly_pest_control_technician.png";
+import { Link } from "wouter";
+import { format } from "date-fns";
 
 export default function Tracking() {
-  const timeline = [
-    { time: "1:30 PM", status: "Booking Confirmed", completed: true },
-    { time: "2:15 PM", status: "Technician Assigned", completed: true },
-    { time: "3:45 PM", status: "Technician En Route", completed: true, active: true },
-    { time: "4:00 PM", status: "Service Started", completed: false },
-    { time: "5:00 PM", status: "Service Completed", completed: false },
-  ];
+  const { user } = useAuth();
+  const { getOrdersByCustomer } = useOrders();
+  
+  const myOrders = user ? getOrdersByCustomer(user.id) : [];
+  
+  // Sort by date (newest first)
+  const sortedOrders = [...myOrders].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  if (myOrders.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
+        <div className="w-20 h-20 bg-secondary/50 rounded-full flex items-center justify-center mb-4">
+          <Clock className="w-10 h-10 text-primary" />
+        </div>
+        <h2 className="text-xl font-bold mb-2">No Orders Yet</h2>
+        <p className="text-muted-foreground mb-6">Book your first pest control service to see tracking details here.</p>
+        <Link href="/book">
+          <Button className="rounded-full px-8">Book Now</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto min-h-screen bg-background">
-      <h1 className="text-2xl font-bold mb-6">Track Order #4921</h1>
+      <h1 className="text-2xl font-bold mb-6">My Orders</h1>
 
-      {/* Map Placeholder */}
-      <div className="bg-slate-200 rounded-3xl h-64 w-full mb-6 relative overflow-hidden shadow-inner border border-border">
-        <div className="absolute inset-0 opacity-50 bg-[url('https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.42,37.78,14,0,0/600x400?access_token=YOUR_ACCESS_TOKEN')] bg-cover bg-center" />
-        
-        {/* Mock Map Elements */}
-        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/50 font-bold text-2xl">
-          LIVE MAP VIEW
-        </div>
-        
-        {/* Tech Marker */}
-        <motion.div 
-          initial={{ x: -50, y: 50 }}
-          animate={{ x: 0, y: 0 }}
-          transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-          className="absolute top-1/2 left-1/2 bg-primary text-white p-2 rounded-full shadow-lg border-4 border-white"
-        >
-          <MapPin className="w-6 h-6" />
-        </motion.div>
-
-        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold shadow-sm">
-          Arriving in 15 mins
-        </div>
-      </div>
-
-      {/* Technician Card */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-border/50 mb-8 flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-gray-100 overflow-hidden border-2 border-primary/20">
-          <img src={techImage} alt="Technician" className="w-full h-full object-cover" />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-bold text-lg">Mike Johnson</h3>
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-primary" /> 4.9 Rating (542 jobs)
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button size="icon" variant="outline" className="rounded-full w-10 h-10 border-primary/20 text-primary hover:bg-primary/5">
-            <MessageSquare className="w-5 h-5" />
-          </Button>
-          <Button size="icon" className="rounded-full w-10 h-10 shadow-md shadow-primary/20">
-            <Phone className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Timeline */}
-      <div className="relative pl-4 space-y-8 before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-        {timeline.map((item, index) => (
-          <motion.div 
-            key={index}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+      <div className="space-y-4">
+        {sortedOrders.map((order, index) => (
+          <motion.div
+            key={order.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="relative flex items-start gap-4"
+            className="bg-white rounded-2xl p-4 shadow-sm border border-border/50"
           >
-            <div className={`
-              relative z-10 w-6 h-6 rounded-full flex items-center justify-center border-2 
-              ${item.completed ? 'bg-primary border-primary text-white' : 
-                item.active ? 'bg-white border-primary text-primary animate-pulse' : 'bg-white border-muted text-muted-foreground'}
-            `}>
-              {item.completed ? <CheckCircle2 className="w-3 h-3" /> : <div className={`w-2 h-2 rounded-full ${item.active ? 'bg-primary' : 'bg-muted'}`} />}
-            </div>
-            <div className="flex-1 pt-0.5">
-              <div className="flex justify-between items-center mb-1">
-                <h4 className={`font-semibold ${item.completed || item.active ? 'text-foreground' : 'text-muted-foreground'}`}>
-                  {item.status}
-                </h4>
-                <span className="text-xs text-muted-foreground font-mono bg-secondary/50 px-2 py-1 rounded-md">
-                  {item.time}
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <span className={`
+                  inline-block px-2 py-1 rounded-md text-xs font-bold mb-2
+                  ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                    order.status === 'accepted' ? 'bg-blue-100 text-blue-700' :
+                    order.status === 'en_route' ? 'bg-purple-100 text-purple-700' :
+                    order.status === 'in_progress' ? 'bg-orange-100 text-orange-700' :
+                    order.status === 'completed' ? 'bg-green-100 text-green-700' :
+                    'bg-gray-100 text-gray-700'}
+                `}>
+                  {order.status.replace('_', ' ').toUpperCase()}
                 </span>
+                <h3 className="font-bold text-lg">{order.serviceType}</h3>
               </div>
-              {item.active && (
-                <p className="text-sm text-primary font-medium flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> Estimated arrival: 4:00 PM
-                </p>
-              )}
+              <span className="text-sm text-muted-foreground">
+                {format(new Date(order.date), "MMM d")}
+              </span>
             </div>
+
+            <div className="space-y-2 text-sm text-muted-foreground mb-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span>{order.address}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>09:00 AM - 11:00 AM</span>
+              </div>
+            </div>
+
+            {/* Show Tech Info if Accepted/Active */}
+            {order.technicianId && (
+               <div className="flex items-center gap-3 pt-3 border-t border-border/30 mb-3">
+                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                   Tech
+                 </div>
+                 <div className="flex-1">
+                   <p className="text-sm font-medium text-foreground">Technician Assigned</p>
+                   <p className="text-xs text-muted-foreground">Your expert is on the case</p>
+                 </div>
+                 <Link href={`/chat/${order.id}`}>
+                   <Button size="icon" variant="ghost" className="h-8 w-8 text-primary bg-primary/5 rounded-full">
+                     <MessageSquare className="w-4 h-4" />
+                   </Button>
+                 </Link>
+               </div>
+            )}
+
+            {order.status === "pending" && (
+              <p className="text-xs text-center text-muted-foreground bg-secondary/20 py-2 rounded-lg">
+                Waiting for technician confirmation...
+              </p>
+            )}
           </motion.div>
         ))}
       </div>

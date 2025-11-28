@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useOrders } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
+import LocationPicker from "@/components/LocationPicker";
 
 const steps = [
   { id: 1, title: "Service Details" },
@@ -191,14 +192,20 @@ export default function Booking() {
                 </div>
                 <div className="space-y-2">
                   <Label>Address</Label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <Input 
-                      value={address} 
-                      onChange={(e) => setAddress(e.target.value)} 
-                      placeholder="123 Green Street" 
-                      className="pl-10 bg-card h-12 rounded-xl" 
+                  <div className="space-y-3">
+                    <LocationPicker 
+                      onSelect={setAddress} 
+                      currentAddress={address} 
                     />
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                      <Input 
+                        value={address} 
+                        onChange={(e) => setAddress(e.target.value)} 
+                        placeholder="Type manually or pick from map" 
+                        className="pl-10 bg-card h-12 rounded-xl" 
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-2">

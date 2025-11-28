@@ -91,7 +91,18 @@ export default function Tracking() {
                 `}>
                   {order.status.replace('_', ' ').toUpperCase()}
                 </span>
-                <h3 className="font-bold text-lg">{order.serviceType}</h3>
+                <h3 className="font-bold text-lg">
+                  {(() => {
+                    const serviceMap: Record<string, string> = {
+                      "General Pest Control": "servicesDetails.generalPestControl",
+                      "Termite Inspection": "servicesDetails.termiteInspection",
+                      "Rodent Control": "servicesDetails.rodentExclusion",
+                      "Bed Bug Treatment": "servicesDetails.mosquitoShield",
+                    };
+                    const key = serviceMap[order.serviceType];
+                    return key ? t(key) : order.serviceType;
+                  })()}
+                </h3>
               </div>
               <span className="text-sm text-muted-foreground">
                 {format(new Date(order.date), "MMM d")}

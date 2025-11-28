@@ -29,6 +29,18 @@ const serviceMap: Record<string, string> = {
   "mosquito": "Bed Bug Treatment",
 };
 
+const serviceTranslationMap: Record<string, string> = {
+  "General Pest Control": "servicesDetails.generalPestControl",
+  "Termite Inspection": "servicesDetails.termiteInspection",
+  "Rodent Control": "servicesDetails.rodentExclusion",
+  "Bed Bug Treatment": "servicesDetails.mosquitoShield",
+};
+
+const getTranslatedServiceName = (serviceName: string, t: any): string => {
+  const key = serviceTranslationMap[serviceName];
+  return key ? t(key) : serviceName;
+};
+
 export default function Booking() {
   const { t } = useLanguage();
   const [step, setStep] = useState(1);
@@ -158,7 +170,7 @@ export default function Booking() {
                         htmlFor={type}
                         className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-card p-4 hover:bg-accent/5 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all"
                       >
-                        <span className="text-sm font-medium">{type}</span>
+                        <span className="text-sm font-medium">{getTranslatedServiceName(type, t)}</span>
                       </Label>
                     </div>
                   ))}
@@ -263,7 +275,7 @@ export default function Booking() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-muted-foreground">
                     <span>{t("dashboard.service")}</span>
-                    <span className="text-foreground font-medium">{serviceType}</span>
+                    <span className="text-foreground font-medium">{getTranslatedServiceName(serviceType, t)}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>{t("bookingDetails.selectDate")}</span>

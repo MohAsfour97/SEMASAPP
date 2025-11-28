@@ -88,6 +88,10 @@ export const translations = {
       rateService: "Rate Service",
       rate: "Rate",
       submit: "Submit",
+      orderHistory: "Order History",
+      noCompletedOrders: "No completed orders yet",
+      activeOrders: "Active Orders",
+      noActiveOrders: "No active orders at the moment",
     },
     // Profile
     profile: {
@@ -356,6 +360,10 @@ export const translations = {
       rateService: "تقييم الخدمة",
       rate: "تقييم",
       submit: "إرسال",
+      orderHistory: "سجل الطلبات",
+      noCompletedOrders: "لا توجد طلبات مكتملة حتى الآن",
+      activeOrders: "الطلبات النشطة",
+      noActiveOrders: "لا توجد طلبات نشطة في الوقت الحالي",
     },
     // Profile
     profile: {

@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Bug, Rat, Search, Check, ArrowRight, Star } from "lucide-react";
+import { Shield, Bug, Rat, Search, Check, ArrowRight, Star, X } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ const servicesList = [
 export default function Services() {
   const { t } = useLanguage();
   const { orders } = useOrders();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const getAverageRating = (serviceType: string) => {
     const serviceOrders = orders.filter(o => 
@@ -65,6 +67,11 @@ export default function Services() {
     return (sum / serviceOrders.length).toFixed(1);
   };
 
+  const filteredServices = servicesList.filter(service =>
+    service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    service.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <div className="mb-6">
@@ -74,11 +81,32 @@ export default function Services() {
 
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-        <Input placeholder={t("servicesDetails.searchServices")} className="pl-9 bg-card shadow-sm border-border/60" />
+        <Input 
+          placeholder={t("servicesDetails.searchServices")} 
+          className="pl-9 pr-9 bg-card shadow-sm border-border/60" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          data-testid="input-search-services"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            data-testid="button-clear-search"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       <div className="space-y-4">
-        {servicesList.map((service, index) => (
+        {filteredServices.length === 0 ? (
+          <div className="text-center py-10 text-muted-foreground">
+            <p>{t("servicesDetails.searchServices")}</p>
+            <p className="text-sm mt-2">"<strong>{searchQuery}</strong>"</p>
+          </div>
+        ) : (
+          filteredServices.map((service, index) => (
           <motion.div
             key={service.id}
             initial={{ opacity: 0, y: 20 }}
@@ -130,7 +158,8 @@ export default function Services() {
               </div>
             </div>
           </motion.div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

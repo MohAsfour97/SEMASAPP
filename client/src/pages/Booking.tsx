@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar as CalendarIcon, MapPin, Check, CreditCard, ChevronLeft, ArrowRight } from "lucide-react";
@@ -21,8 +21,16 @@ const steps = [
   { id: 4, title: "Payment" },
 ];
 
+const serviceMap: Record<string, string> = {
+  "general": "General Pest Control",
+  "termite": "Termite Inspection",
+  "rodent": "Rodent Control",
+  "mosquito": "Bed Bug Treatment",
+};
+
 export default function Booking() {
   const [step, setStep] = useState(1);
+  const [location] = useLocation();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { createOrder } = useOrders();
@@ -30,8 +38,15 @@ export default function Booking() {
   
   const [loading, setLoading] = useState(false);
 
+  // Get service from URL query param
+  const getInitialService = () => {
+    const params = new URLSearchParams(location.split("?")[1]);
+    const serviceId = params.get("service");
+    return serviceId && serviceMap[serviceId] ? serviceMap[serviceId] : "General Pest Control";
+  };
+
   // Form State
-  const [serviceType, setServiceType] = useState("General Pest Control");
+  const [serviceType, setServiceType] = useState(getInitialService());
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState<string | null>(null);
   const [address, setAddress] = useState("");

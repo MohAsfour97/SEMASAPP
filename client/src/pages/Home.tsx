@@ -59,7 +59,7 @@ export default function Home() {
               WebkitTextStroke: '0.5px #2dd4bf',
               textShadow: '0 0 10px #2dd4bf, 0 0 18px #14b8a6',
               paintOrder: 'stroke fill'
-            }}>{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
+            }}>{t("home.pestFree")}{t("home.worryFree") && <><br/>{t("home.worryFree")}</>}</h1>
             <p className="text-white/90 text-base mb-4 max-w-[80%]">
               {t("home.professional")}
             </p>

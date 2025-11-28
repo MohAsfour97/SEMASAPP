@@ -6,12 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, ArrowRight, Mail, Lock, User, Loader2 } from "lucide-react";
+import { Shield, ArrowRight, Mail, Lock, User, Loader2, Globe } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import heroImage from "@assets/generated_images/clean_modern_living_room_interior.png"; // Re-using the asset
 
 export default function AuthPage() {
   const { login, register, isLoading } = useAuth();
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [mode, setMode] = useState<"login" | "register">("login");
   
   // Form States
@@ -41,6 +47,39 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      {/* Language Toggle */}
+      <div className="absolute top-4 right-4 z-40">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="gap-2"
+              data-testid="button-language-toggle-auth"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-xs font-medium">{language.toUpperCase()}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuItem 
+              onClick={() => setLanguage("en")}
+              className={language === "en" ? "bg-primary/10" : ""}
+              data-testid="button-language-en-auth"
+            >
+              English
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setLanguage("ar")}
+              className={language === "ar" ? "bg-primary/10" : ""}
+              data-testid="button-language-ar-auth"
+            >
+              العربية
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       {/* Background Design */}
       <div className="absolute top-0 left-0 right-0 h-[45vh] overflow-hidden rounded-b-[3rem] z-0">
         <div className="absolute inset-0 bg-primary/80 mix-blend-multiply z-10" />

@@ -1,18 +1,29 @@
 import { useOrders } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
 import { motion } from "framer-motion";
-import { Clock, MapPin, CheckCircle2, MessageSquare, ChevronRight } from "lucide-react";
+import { Clock, MapPin, CheckCircle2, MessageSquare, ChevronRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { format } from "date-fns";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 import LiveMap from "@/components/LiveMap";
 
 export default function Tracking() {
   const { user } = useAuth();
-  const { getOrdersByCustomer } = useOrders();
+  const { getOrdersByCustomer, rateOrder } = useOrders();
+  const { toast } = useToast();
+  const [rating, setRating] = useState(0);
   
   const myOrders = user ? getOrdersByCustomer(user.id) : [];
+  
+  const handleRate = (orderId: string) => {
+    rateOrder(orderId, rating);
+    toast({ title: "Thanks for your feedback!", description: "We appreciate your rating." });
+  };
   
   // Sort by date (newest first)
   const sortedOrders = [...myOrders].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -43,7 +54,7 @@ export default function Tracking() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-2xl p-4 shadow-sm border border-border/50"
+            className="bg-card rounded-2xl p-4 shadow-sm border border-border/50"
           >
             <div className="flex justify-between items-start mb-3">
               <div>

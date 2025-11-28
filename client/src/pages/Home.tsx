@@ -68,7 +68,7 @@ export default function Home() {
               <span className="text-primary text-sm font-medium cursor-pointer">Track</span>
             </Link>
           </div>
-          <Card className="overflow-hidden border-none shadow-md bg-white relative">
+          <Card className="overflow-hidden border-none shadow-md bg-card relative">
             <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-3">

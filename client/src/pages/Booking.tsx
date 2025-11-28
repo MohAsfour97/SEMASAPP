@@ -126,7 +126,7 @@ export default function Booking() {
                       <RadioGroupItem value={type} id={type} className="peer sr-only" />
                       <Label
                         htmlFor={type}
-                        className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-accent/5 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all"
+                        className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-card p-4 hover:bg-accent/5 hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all"
                       >
                         <span className="text-sm font-medium">{type}</span>
                       </Label>
@@ -145,7 +145,7 @@ export default function Booking() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-border/50">
+              <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50">
                 <Calendar
                   mode="single"
                   selected={date}
@@ -187,7 +187,7 @@ export default function Booking() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Full Name</Label>
-                  <Input defaultValue={user?.name} disabled className="bg-white h-12 rounded-xl opacity-75" />
+                  <Input defaultValue={user?.name} disabled className="bg-card h-12 rounded-xl opacity-75" />
                 </div>
                 <div className="space-y-2">
                   <Label>Address</Label>
@@ -197,7 +197,7 @@ export default function Booking() {
                       value={address} 
                       onChange={(e) => setAddress(e.target.value)} 
                       placeholder="123 Green Street" 
-                      className="pl-10 bg-white h-12 rounded-xl" 
+                      className="pl-10 bg-card h-12 rounded-xl" 
                     />
                   </div>
                 </div>
@@ -207,7 +207,7 @@ export default function Booking() {
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
                     placeholder="Describe the pests you've seen..." 
-                    className="bg-white rounded-xl min-h-[120px]" 
+                    className="bg-card rounded-xl min-h-[120px]" 
                   />
                 </div>
               </div>
@@ -222,7 +222,7 @@ export default function Booking() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-border/50 space-y-4">
+              <div className="bg-card rounded-2xl p-6 shadow-sm border border-border/50 space-y-4">
                 <h3 className="font-semibold text-lg border-b pb-4">Order Summary</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-muted-foreground">
@@ -246,7 +246,7 @@ export default function Booking() {
 
               <div className="space-y-4">
                 <Label>Payment Method</Label>
-                <div className="flex items-center gap-4 p-4 border rounded-xl bg-white">
+                <div className="flex items-center gap-4 p-4 border rounded-xl bg-card">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <CreditCard className="w-5 h-5" />
                   </div>

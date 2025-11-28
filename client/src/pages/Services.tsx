@@ -7,43 +7,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOrders } from "@/lib/orders";
 
-const servicesList = [
+const getServicesList = (t: any) => [
   {
     id: "general",
-    title: "General Pest Control",
-    description: "Comprehensive protection against common household pests including ants, spiders, and roaches.",
+    titleKey: "servicesDetails.generalPestControl",
+    descriptionKey: "servicesDetails.generalPestDesc",
     price: "149",
-    features: ["Interior & Exterior Treatment", "Web Removal", "90-Day Guarantee"],
+    featuresKeys: ["servicesDetails.interiorExterior", "servicesDetails.webRemoval", "servicesDetails.guarantee"],
     icon: Shield,
     color: "text-primary",
     bg: "bg-primary/10",
   },
   {
     id: "termite",
-    title: "Termite Defense",
-    description: "Advanced termite detection and elimination system to protect your home's structure.",
+    titleKey: "servicesDetails.termiteDefense",
+    descriptionKey: "servicesDetails.termiteDesc",
     price: "299",
-    features: ["Thorough Inspection", "Bait Station Installation", "Annual Monitoring"],
+    featuresKeys: ["servicesDetails.thoroughInspection", "servicesDetails.baitStation", "servicesDetails.annualMonitoring"],
     icon: Bug,
     color: "text-orange-600",
     bg: "bg-orange-100",
   },
   {
     id: "rodent",
-    title: "Rodent Exclusion",
-    description: "Humane removal and entry point sealing to keep rats and mice out for good.",
+    titleKey: "servicesDetails.rodentExclusion",
+    descriptionKey: "servicesDetails.rodentDesc",
     price: "199",
-    features: ["Entry Point Inspection", "Trapping & Removal", "Sanitization"],
+    featuresKeys: ["servicesDetails.entryPointInspection", "servicesDetails.trappingRemoval", "servicesDetails.sanitization"],
     icon: Rat,
     color: "text-slate-600",
     bg: "bg-slate-100",
   },
   {
     id: "mosquito",
-    title: "Mosquito Shield",
-    description: "Seasonal yard treatment to reduce mosquito populations and reclaim your outdoor space.",
+    titleKey: "servicesDetails.mosquitoShield",
+    descriptionKey: "servicesDetails.mosquitoDesc",
     price: "89",
-    features: ["Yard Fogging", "Larvicide Application", "Monthly Service"],
+    featuresKeys: ["servicesDetails.yardFogging", "servicesDetails.larvicide", "servicesDetails.monthlyService"],
     icon: Bug,
     color: "text-green-600",
     bg: "bg-green-100",
@@ -54,6 +54,8 @@ export default function Services() {
   const { t } = useLanguage();
   const { orders } = useOrders();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const servicesList = getServicesList(t);
 
   const getAverageRating = (serviceType: string) => {
     const serviceOrders = orders.filter(o => 
@@ -68,8 +70,8 @@ export default function Services() {
   };
 
   const filteredServices = servicesList.filter(service =>
-    service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    service.description.toLowerCase().includes(searchQuery.toLowerCase())
+    t(service.titleKey).toLowerCase().includes(searchQuery.toLowerCase()) ||
+    t(service.descriptionKey).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -121,21 +123,21 @@ export default function Services() {
                 </div>
                 <div>
                   <div className="flex justify-between items-start w-full">
-                     <h3 className="font-bold text-lg text-foreground">{service.title}</h3>
+                     <h3 className="font-bold text-lg text-foreground">{t(service.titleKey)}</h3>
                      <div className="flex items-center gap-1 bg-yellow-50 px-2 py-0.5 rounded-full border border-yellow-100">
                         <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-                        <span className="text-xs font-bold text-yellow-700">{getAverageRating(service.title)}</span>
+                        <span className="text-xs font-bold text-yellow-700">{getAverageRating(t(service.titleKey))}</span>
                      </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed mt-1">{service.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-1">{t(service.descriptionKey)}</p>
                 </div>
               </div>
               
               <div className="space-y-2 mb-4 pl-16">
-                {service.features.map((feature, i) => (
+                {service.featuresKeys.map((featureKey, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm text-foreground/80">
                     <Check className="w-4 h-4 text-primary" />
-                    <span>{feature}</span>
+                    <span>{t(featureKey)}</span>
                   </div>
                 ))}
               </div>

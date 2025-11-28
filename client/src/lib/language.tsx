@@ -165,6 +165,8 @@ export const translations = {
       larvicide: "Larvicide Application",
       monthlyService: "Monthly Service",
       bookNow: "Book Now",
+      termiteInspection: "Termite Inspection",
+      termiteInspectionDesc: "Advanced termite detection and elimination system to protect your home's structure.",
     },
     // Booking Details
     bookingDetails: {
@@ -413,6 +415,8 @@ export const translations = {
       larvicide: "تطبيق مبيدات اليرقات",
       monthlyService: "الخدمة الشهرية",
       bookNow: "احجز الآن",
+      termiteInspection: "فحص الأرضة",
+      termiteInspectionDesc: "نظام متقدم للكشف والقضاء على الأرضة لحماية هيكل منزلك.",
     },
     // Booking Details
     bookingDetails: {

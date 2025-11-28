@@ -143,8 +143,8 @@ export default function Home() {
           </div>
           <div className="space-y-3">
             {[
-              { id: "termite", name: "Termite Inspection", price: "99", icon: Shield },
-              { id: "general", name: "General Pest Control", price: "149", icon: CheckCircle },
+              { id: "termite", nameKey: "servicesDetails.termiteInspection", price: "99", icon: Shield },
+              { id: "general", nameKey: "servicesDetails.generalPestControl", price: "149", icon: CheckCircle },
             ].map((service, i) => (
               <motion.div 
                 key={i}
@@ -159,7 +159,7 @@ export default function Home() {
                         <service.icon className="w-6 h-6" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-foreground">{service.name}</h3>
+                        <h3 className="font-semibold text-foreground">{t(service.nameKey)}</h3>
                         <p className="text-sm text-muted-foreground">{t("common.startingAt")} {service.price} {t("common.sar")}</p>
                       </div>
                       <ArrowRight className="w-5 h-5 text-muted-foreground/50" />

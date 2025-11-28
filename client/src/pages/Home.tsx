@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, Clock, Star, CheckCircle, ArrowRight, Phone, MessageCircle } from "lucide-react";
+import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language";
@@ -7,6 +7,9 @@ import { useAuth } from "@/lib/auth";
 import { useOrders } from "@/lib/orders";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
 
 const serviceTranslationMap: Record<string, string> = {
@@ -26,6 +29,13 @@ export default function Home() {
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
   const [scrollY, setScrollY] = useState(0);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
+  const [inquiryData, setInquiryData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: ""
+  });
   
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +45,12 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleInquirySubmit = () => {
+    alert("Inquiry submitted successfully!");
+    setInquiryData({ name: "", email: "", phone: "", message: "" });
+    setInquiryOpen(false);
+  };
   
   // Get customer's active order (non-completed, non-cancelled)
   const customerOrders = user ? getOrdersByCustomer(user.id) : [];
@@ -151,7 +167,7 @@ export default function Home() {
                     </div>
                     <Link href={`/chat/${activeOrder.id}`}>
                       <Button size="icon" variant="ghost" className="rounded-full h-8 w-8 text-primary bg-primary/5">
-                        <Phone className="w-4 h-4" />
+                        <MessageCircle className="w-4 h-4" />
                       </Button>
                     </Link>
                   </div>
@@ -223,12 +239,12 @@ export default function Home() {
                 data-testid="map-semas-office"
               />
             </div>
-            <div className={`p-4 border-t border-border/30 flex items-center justify-between ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
-              <div>
+            <div className={`p-4 border-t border-border/30 flex items-center justify-between ${language === 'ar' ? 'flex-row' : ''}`}>
+              <div className={language === 'ar' ? 'order-2' : 'order-1'}>
                 <p className="font-semibold text-foreground mb-2">{t("home.office")}</p>
                 <p className="text-sm text-muted-foreground">Riyadh, Saudi Arabia</p>
               </div>
-              <div className="flex gap-2">
+              <div className={`flex gap-2 ${language === 'ar' ? 'order-1' : 'order-2'}`}>
                 {/* WhatsApp Icon */}
                 <a 
                   href="https://wa.me/966"
@@ -242,24 +258,82 @@ export default function Home() {
                     whileTap={{ scale: 0.9 }}
                     className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer flex-shrink-0"
                   >
-                    <Phone className="w-4 h-4 text-white" />
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.718.707 5.337 2.05 7.648l-2.186 7.978a.75.75 0 00.966.953l7.82-2.525a9.872 9.872 0 0011.154-9.804c0-5.436-4.313-9.848-9.654-9.848z"/>
+                    </svg>
                   </motion.div>
                 </a>
 
                 {/* Send Inquiry Icon */}
-                <button 
-                  onClick={() => alert("Inquiry form would open here")}
-                  data-testid="button-inquiry"
-                  title={t("home.sendInquiry")}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.2, rotate: -5 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer flex-shrink-0"
-                  >
-                    <MessageCircle className="w-4 h-4 text-white" />
-                  </motion.div>
-                </button>
+                <Dialog open={inquiryOpen} onOpenChange={setInquiryOpen}>
+                  <DialogTrigger asChild>
+                    <button
+                      data-testid="button-inquiry"
+                      title={t("home.sendInquiry")}
+                    >
+                      <motion.div
+                        whileHover={{ scale: 1.2, rotate: -5 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer flex-shrink-0"
+                      >
+                        <MessageSquare className="w-4 h-4 text-white" />
+                      </motion.div>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>{t("home.inquiryForm")}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">{t("home.yourName")}</label>
+                        <Input
+                          placeholder={t("home.enterName")}
+                          value={inquiryData.name}
+                          onChange={(e) => setInquiryData({...inquiryData, name: e.target.value})}
+                          data-testid="input-inquiry-name"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">{t("home.yourEmail")}</label>
+                        <Input
+                          type="email"
+                          placeholder={t("home.enterEmail")}
+                          value={inquiryData.email}
+                          onChange={(e) => setInquiryData({...inquiryData, email: e.target.value})}
+                          data-testid="input-inquiry-email"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">{t("home.yourPhone")}</label>
+                        <Input
+                          placeholder={t("home.enterPhone")}
+                          value={inquiryData.phone}
+                          onChange={(e) => setInquiryData({...inquiryData, phone: e.target.value})}
+                          data-testid="input-inquiry-phone"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">{t("home.yourMessage")}</label>
+                        <Textarea
+                          placeholder={t("home.enterMessage")}
+                          value={inquiryData.message}
+                          onChange={(e) => setInquiryData({...inquiryData, message: e.target.value})}
+                          className="min-h-[100px]"
+                          data-testid="textarea-inquiry-message"
+                        />
+                      </div>
+                      <div className="flex gap-2 justify-end">
+                        <Button variant="outline" onClick={() => setInquiryOpen(false)}>
+                          {t("home.cancel")}
+                        </Button>
+                        <Button onClick={handleInquirySubmit}>
+                          {t("home.submit")}
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>

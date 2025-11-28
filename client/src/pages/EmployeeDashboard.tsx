@@ -25,9 +25,8 @@ export default function EmployeeDashboard() {
   const { getAllPendingOrders, getOrdersByTechnician, updateOrderStatus } = useOrders();
   
   const [activeTab, setActiveTab] = useState<"available" | "my_jobs">("available");
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [openDialogOrderId, setOpenDialogOrderId] = useState<string | null>(null);
   const [viewMapOrder, setViewMapOrder] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const pendingOrders = getAllPendingOrders();
   const myJobs = user ? getOrdersByTechnician(user.id) : [];
@@ -35,15 +34,13 @@ export default function EmployeeDashboard() {
   const handleAccept = (orderId: string) => {
     if (user) {
       updateOrderStatus(orderId, "accepted", user.id);
-      setIsDialogOpen(false);
-      setSelectedOrder(null);
+      setOpenDialogOrderId(null);
     }
   };
 
   const handleDecline = (orderId: string) => {
     updateOrderStatus(orderId, 'cancelled');
-    setIsDialogOpen(false);
-    setSelectedOrder(null);
+    setOpenDialogOrderId(null);
   };
 
   const handleStatusUpdate = (orderId: string, newStatus: any) => {
@@ -103,12 +100,9 @@ export default function EmployeeDashboard() {
                     </div>
                   </div>
                   
-                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <Dialog open={openDialogOrderId === order.id} onOpenChange={(open) => setOpenDialogOrderId(open ? order.id : null)}>
                     <DialogTrigger asChild>
-                      <Button className="w-full" onClick={() => {
-                        setSelectedOrder(order);
-                        setIsDialogOpen(true);
-                      }} data-testid="button-view-details">
+                      <Button className="w-full" onClick={() => setOpenDialogOrderId(order.id)} data-testid="button-view-details">
                         {t("dashboard.viewDetails")}
                       </Button>
                     </DialogTrigger>

@@ -54,10 +54,11 @@ export default function Services() {
   const { t, language } = useLanguage();
   const { orders } = useOrders();
   const [searchQuery, setSearchQuery] = useState("");
-  const [animatedCards, setAnimatedCards] = useState<Set<string>>(new Set());
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
   const servicesList = getServicesList(t);
+  const [animatedCards, setAnimatedCards] = useState<Set<string>>(
+    new Set(servicesList.map(s => s.id))
+  );
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const observerOptions = {

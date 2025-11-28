@@ -297,7 +297,7 @@ export const translations = {
       viewAll: "عرض الكل",
       enRoute: "في الطريق",
       serviceTime: "09:00 صباحاً - 11:00 صباحاً",
-      visitUs: "زيارتنا",
+      visitUs: "تفضل بزيارتنا",
       findUsRiyadh: "ابحث عن مكتبنا في الرياض، المملكة العربية السعودية",
       office: "مكتب SEMAS",
     },

@@ -115,7 +115,12 @@ export default function Services() {
                   <span className="text-xs text-muted-foreground block">Starting at</span>
                   <span className="text-xl font-bold text-primary">{service.price}</span>
                 </div>
-                <Link href={`/book?service=${service.id}`}>
+                <Link 
+                  href="/book"
+                  onClick={() => {
+                    localStorage.setItem("selectedService", service.id);
+                  }}
+                >
                   <Button size="sm" className="rounded-full px-4 group-hover:bg-primary group-hover:text-white transition-colors">
                     Book Now <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>

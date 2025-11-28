@@ -38,19 +38,31 @@ export default function Booking() {
   
   const [loading, setLoading] = useState(false);
 
-  // Get service from URL query param
-  const getInitialService = () => {
-    const params = new URLSearchParams(location.split("?")[1]);
-    const serviceId = params.get("service");
-    return serviceId && serviceMap[serviceId] ? serviceMap[serviceId] : "General Pest Control";
-  };
-
   // Form State
-  const [serviceType, setServiceType] = useState(getInitialService());
+  const [serviceType, setServiceType] = useState("General Pest Control");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState<string | null>(null);
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
+
+  // Update service type from localStorage or URL
+  useEffect(() => {
+    // First, try to get from localStorage (set by Services page)
+    const savedService = localStorage.getItem("selectedService");
+    if (savedService && serviceMap[savedService]) {
+      setServiceType(serviceMap[savedService]);
+      localStorage.removeItem("selectedService"); // Clean up
+      return;
+    }
+    
+    // Fallback: try to get from URL query string
+    const params = new URLSearchParams(window.location.search || location.substring(location.indexOf("?")));
+    const serviceId = params.get("service");
+    
+    if (serviceId && serviceMap[serviceId]) {
+      setServiceType(serviceMap[serviceId]);
+    }
+  }, [location, serviceMap]);
 
   const handleNext = () => {
     if (step === 2 && !time) {

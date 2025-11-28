@@ -31,7 +31,7 @@ export default function AuthPage() {
       setEmail("jane@example.com");
       setPassword("password");
     } else {
-      setEmail("mike@pestguard.com");
+      setEmail("mike@semas.com");
       setPassword("password");
     }
     setMode("login");
@@ -56,7 +56,7 @@ export default function AuthPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-card shadow-xl mb-4 text-primary">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-1">PestGuard</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-1">SEMAS</h1>
           <p className="text-muted-foreground/80">Your home, protected.</p>
         </div>
 

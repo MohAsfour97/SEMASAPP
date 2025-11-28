@@ -94,8 +94,11 @@ export default function AuthPage() {
       <div className="relative z-30 flex-1 flex flex-col px-6 pt-20 pb-8 max-w-md mx-auto w-full">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-card shadow-xl mb-4 text-primary">
-            <Shield className="w-8 h-8" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-xl mb-4 shadow-primary/25">
+            <span className="text-4xl font-black text-white" style={{ 
+              WebkitTextStroke: '0.5px rgba(255,255,255,0.3)',
+              textShadow: '0 2px 8px rgba(45, 212, 191, 0.4)'
+            }}>S</span>
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-1">SEMAS</h1>
           <p className="text-muted-foreground/80">{t("home.professional")}</p>

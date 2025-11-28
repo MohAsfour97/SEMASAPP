@@ -30,7 +30,7 @@ export default function Home() {
   const { getOrdersByCustomer } = useOrders();
   const [scrollY, setScrollY] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
-  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set(['section-stats', 'section-active-service', 'section-popular-services', 'section-visit-us']));
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const lastScrollY = useRef(0);
   const observerRef = useRef<IntersectionObserver | null>(null);

@@ -191,8 +191,11 @@ export default function Profile() {
 
       {/* Personal Information Modal */}
       {showPersonalInfo && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-          <div className="w-full bg-card rounded-t-3xl p-6 space-y-4 animate-in slide-in-from-bottom-5">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end" onClick={() => setShowPersonalInfo(false)}>
+          <div 
+            className="w-full bg-card rounded-t-3xl p-6 space-y-4 animate-in slide-in-from-bottom-5 max-h-[90vh] overflow-y-auto pb-32"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold">{t("trackingDetails.personalInformation")}</h2>
               <button
@@ -231,7 +234,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-6 fixed bottom-24 left-0 right-0 px-4 bg-card">
               <Button
                 variant="outline"
                 className="flex-1 h-11 rounded-xl"

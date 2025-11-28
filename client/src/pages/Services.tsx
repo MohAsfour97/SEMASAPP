@@ -58,7 +58,11 @@ export default function Services() {
   const [animatedCards, setAnimatedCards] = useState<Set<string>>(
     new Set(servicesList.map(s => s.id))
   );
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
+  const lastScrollY = useRef(0);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observerOptions = {
@@ -79,6 +83,18 @@ export default function Services() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollDirection(currentScrollY > lastScrollY.current ? 'down' : 'up');
+      setScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const getAverageRating = (serviceType: string) => {
     const serviceOrders = orders.filter(o => 
       o.serviceType.toLowerCase().includes(serviceType.toLowerCase().split(" ")[0]) && 
@@ -96,17 +112,28 @@ export default function Services() {
     t(service.descriptionKey).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const getCardOffset = (index: number) => {
+    const baseOffset = scrollY * (0.3 + index * 0.1);
+    return scrollDirection === 'down' ? baseOffset : -baseOffset * 0.5;
+  };
+
   return (
-    <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
+    <div className="pb-24 pt-8 px-4 max-w-md mx-auto" ref={containerRef}>
       {/* Header Section with Enhanced Typography */}
       <motion.div 
         className="mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        style={{ y: scrollY * 0.15 }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-5 h-5 text-primary" />
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          >
+            <Sparkles className="w-5 h-5 text-primary" />
+          </motion.div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">{t("servicesDetails.ourServices")}</h1>
         </div>
         <p className="text-muted-foreground text-sm">{t("servicesDetails.professionalSolutions")}</p>
@@ -164,39 +191,75 @@ export default function Services() {
             }}
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={animatedCards.has(service.id) ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.95 }}
-            transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+            transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
+            style={{ 
+              y: animatedCards.has(service.id) ? getCardOffset(index) : 0,
+            }}
             className="group"
           >
             {/* Card with Modern Design */}
-            <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
-              {/* Gradient Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              {/* Animated Border */}
+            <motion.div 
+              className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group/card"
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              {/* Animated Background Gradient */}
               <motion.div 
-                className="absolute inset-0 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"
-                whileHover={{ borderColor: "rgba(var(--primary), 0.6)" }}
+                className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+                animate={{ opacity: [0, 0.05, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+              />
+              
+              {/* Animated Border with Glow */}
+              <motion.div 
+                className="absolute inset-0 rounded-2xl border-2 border-primary/20 group-hover/card:border-primary/50 transition-colors duration-300"
+                whileHover={{ borderColor: "var(--primary)" }}
+              />
+              
+              {/* Glow Effect on Hover */}
+              <motion.div 
+                className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 opacity-0 group-hover/card:opacity-100 blur-xl transition-opacity duration-300 -z-10"
               />
               
               <div className="relative bg-card/95 backdrop-blur-sm rounded-2xl p-6 border border-border/50">
                 {/* Top Section - Icon and Title */}
                 <div className="flex items-start gap-4 mb-5">
                   <motion.div 
-                    className={`w-14 h-14 rounded-xl ${service.bg} flex items-center justify-center ${service.color} shrink-0 shadow-md`}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    className={`w-14 h-14 rounded-xl ${service.bg} flex items-center justify-center ${service.color} shrink-0 shadow-md relative overflow-hidden`}
+                    whileHover={{ scale: 1.15, rotate: 8 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    animate={{ 
+                      y: animatedCards.has(service.id) ? [0, -3, 0] : 0
+                    }}
+                    style={{
+                      animation: animatedCards.has(service.id) ? `float 3s ease-in-out ${index * 0.2}s infinite` : 'none'
+                    }}
                   >
-                    <service.icon className="w-7 h-7" />
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    />
+                    <service.icon className="w-7 h-7 relative z-10" />
                   </motion.div>
                   
                   <div className="flex-1">
                     <div className="flex justify-between items-start gap-2 mb-2">
                       <h3 className="font-bold text-lg leading-tight text-foreground">{t(service.titleKey)}</h3>
                       <motion.div 
-                        className="flex items-center gap-1 bg-gradient-to-r from-yellow-50 to-amber-50 px-3 py-1 rounded-full border border-yellow-200 shadow-sm shrink-0"
-                        whileHover={{ scale: 1.05 }}
+                        className="flex items-center gap-1 bg-gradient-to-r from-yellow-50 to-amber-50 px-3 py-1 rounded-full border border-yellow-200 shadow-sm shrink-0 relative overflow-hidden"
+                        whileHover={{ scale: 1.1 }}
+                        animate={{ 
+                          boxShadow: ["0 0 0px rgba(251,191,36,0)", "0 0 12px rgba(251,191,36,0.3)", "0 0 0px rgba(251,191,36,0)"]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
                       >
-                        <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                        <motion.div 
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                        >
+                          <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                        </motion.div>
                         <span className="text-xs font-bold text-yellow-700">{getAverageRating(t(service.titleKey))}</span>
                       </motion.div>
                     </div>
@@ -209,13 +272,19 @@ export default function Services() {
                   {service.featuresKeys.map((featureKey, i) => (
                     <motion.div 
                       key={i} 
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-3 group/feature"
                       initial={{ opacity: 0, x: -10 }}
                       animate={animatedCards.has(service.id) ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                      transition={{ delay: animatedCards.has(service.id) ? 0.2 + i * 0.1 : 0 }}
+                      transition={{ delay: animatedCards.has(service.id) ? 0.25 + i * 0.08 : 0, duration: 0.4 }}
+                      whileHover={{ x: 5 }}
                     >
-                      <Check className="w-5 h-5 text-primary flex-shrink-0" />
-                      <span className="text-sm text-foreground/90">{t(featureKey)}</span>
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
+                      >
+                        <Check className="w-5 h-5 text-primary flex-shrink-0 group-hover/feature:text-green-500 transition-colors" />
+                      </motion.div>
+                      <span className="text-sm text-foreground/90 group-hover/feature:text-foreground transition-colors">{t(featureKey)}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -223,11 +292,17 @@ export default function Services() {
                 {/* Bottom Section - Price and CTA */}
                 <div className="flex items-center justify-between pt-5 border-t border-border/50">
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="cursor-default"
+                    whileHover={{ scale: 1.08 }}
+                    className="cursor-default group/price"
                   >
                     <span className="text-xs text-muted-foreground block mb-1 font-medium">{t("common.startingAt")}</span>
-                    <span className="text-2xl font-bold text-primary">{service.price}</span>
+                    <motion.div 
+                      className="text-2xl font-bold text-primary group-hover/price:text-transparent group-hover/price:bg-clip-text group-hover/price:bg-gradient-to-r group-hover/price:from-primary group-hover/price:to-purple-500 transition-all"
+                      animate={{ scale: [1, 1.02, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: index * 0.15 }}
+                    >
+                      {service.price}
+                    </motion.div>
                     <span className="text-xs text-muted-foreground ml-1">{t("common.sar")}</span>
                   </motion.div>
                   
@@ -238,25 +313,55 @@ export default function Services() {
                     }}
                   >
                     <motion.div
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.1, y: -3 }}
+                      whileTap={{ scale: 0.92 }}
                     >
-                      <Button 
-                        size="sm" 
-                        className="rounded-full px-5 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-medium shadow-md hover:shadow-lg transition-all"
+                      <motion.div
+                        className="relative overflow-hidden"
+                        animate={{ boxShadow: ["0 4px 8px rgba(0,0,0,0.1)", "0 8px 16px rgba(var(--primary-rgb), 0.3)", "0 4px 8px rgba(0,0,0,0.1)"] }}
+                        transition={{ duration: 2, repeat: Infinity }}
                       >
-                        {t("servicesDetails.bookNow")} 
-                        <ArrowRight className="w-4 h-4 ml-2" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
-                      </Button>
+                        <Button 
+                          size="sm" 
+                          className="rounded-full px-5 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-medium shadow-md hover:shadow-xl transition-all relative overflow-hidden group/btn"
+                        >
+                          <motion.div 
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                            animate={{ x: [-100, 100] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+                          <span className="relative flex items-center gap-2">
+                            {t("servicesDetails.bookNow")} 
+                            <motion.div
+                              animate={{ x: [0, 3, 0] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                              <ArrowRight className="w-4 h-4" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
+                            </motion.div>
+                          </span>
+                        </Button>
+                      </motion.div>
                     </motion.div>
                   </Link>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
           ))
         )}
       </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 0px rgba(var(--primary-rgb), 0); }
+          50% { box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3); }
+        }
+      `}</style>
     </div>
   );
 }

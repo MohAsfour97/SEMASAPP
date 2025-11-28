@@ -34,7 +34,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-bold mb-2">{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
+            <h1 className="text-3xl font-bold mb-2 text-primary">{t("home.pestFree")}<br/>{t("home.worryFree")}</h1>
             <p className="text-white/90 text-sm mb-4 max-w-[80%]">
               {t("home.professional")}
             </p>

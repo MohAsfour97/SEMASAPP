@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Shield, Clock, Star, CheckCircle, ArrowRight, Phone } from "lucide-react";
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/language";
 import { useAuth } from "@/lib/auth";
 import { useOrders } from "@/lib/orders";
@@ -12,6 +13,16 @@ export default function Home() {
   const { t } = useLanguage();
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
+  const [scrollY, setScrollY] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   
   // Get customer's active order (non-completed, non-cancelled)
   const customerOrders = user ? getOrdersByCustomer(user.id) : [];
@@ -23,12 +34,21 @@ export default function Home() {
     <div className="pb-24">
       {/* Hero Section */}
       <div className="relative h-[40vh] w-full overflow-hidden rounded-b-[2rem] shadow-lg">
-        <img 
-          src={heroImage} 
-          alt="Clean home" 
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white">
+        <div 
+          style={{
+            transform: `translateY(${scrollY * 0.5}px) scale(${1 + scrollY * 0.0001})`,
+            filter: `blur(${Math.min(scrollY * 0.05, 8)}px)`,
+            transition: 'transform 0.1s ease-out, filter 0.1s ease-out'
+          }}
+          className="absolute inset-0 origin-center"
+        >
+          <img 
+            src={heroImage} 
+            alt="Clean home" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white" style={{ opacity: 1 - scrollY * 0.003 }}>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

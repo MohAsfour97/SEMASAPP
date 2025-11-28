@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
   const [scrollY, setScrollY] = useState(0);
@@ -187,7 +187,7 @@ export default function Home() {
                         <h3 className="font-semibold text-foreground">{t(service.nameKey)}</h3>
                         <p className="text-sm text-muted-foreground">{t("common.startingAt")} {service.price} {t("common.sar")}</p>
                       </div>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground/50" />
+                      <ArrowRight className="w-5 h-5 text-muted-foreground/50" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
                     </CardContent>
                   </Card>
                 </Link>

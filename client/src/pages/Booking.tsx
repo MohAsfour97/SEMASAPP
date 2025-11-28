@@ -42,7 +42,7 @@ const getTranslatedServiceName = (serviceName: string, t: any): string => {
 };
 
 export default function Booking() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [step, setStep] = useState(1);
   const [location] = useLocation();
   const [, setLocation] = useLocation();
@@ -321,7 +321,7 @@ export default function Booking() {
           ) : step === 4 ? (
             <>Pay & Book <Check className="ml-2 w-5 h-5" /></>
           ) : (
-            <>Continue <ArrowRight className="ml-2 w-5 h-5" /></>
+            <>Continue <ArrowRight className="ml-2 w-5 h-5" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} /></>
           )}
         </Button>
       </div>

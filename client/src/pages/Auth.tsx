@@ -176,9 +176,9 @@ export default function AuthPage() {
                   {isLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : mode === "login" ? (
-                    <>{t("auth.signIn")} <ArrowRight className="ml-2 w-5 h-5" /></>
+                    <>{t("auth.signIn")} <ArrowRight className="ml-2 w-5 h-5" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} /></>
                   ) : (
-                    <>{t("auth.createAccount")} <ArrowRight className="ml-2 w-5 h-5" /></>
+                    <>{t("auth.createAccount")} <ArrowRight className="ml-2 w-5 h-5" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} /></>
                   )}
                 </Button>
               </div>

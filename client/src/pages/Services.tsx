@@ -51,7 +51,7 @@ const getServicesList = (t: any) => [
 ];
 
 export default function Services() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { orders } = useOrders();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -154,7 +154,7 @@ export default function Services() {
                   }}
                 >
                   <Button size="sm" className="rounded-full px-4 group-hover:bg-primary group-hover:text-white transition-colors">
-                    {t("servicesDetails.bookNow")} <ArrowRight className="w-4 h-4 ml-1" />
+                    {t("servicesDetails.bookNow")} <ArrowRight className="w-4 h-4 ml-1" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
                   </Button>
                 </Link>
               </div>

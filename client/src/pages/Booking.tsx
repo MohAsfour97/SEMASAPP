@@ -32,10 +32,20 @@ export default function Booking() {
   // Form State
   const [serviceType, setServiceType] = useState("General Pest Control");
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [time, setTime] = useState<string | null>(null);
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
 
   const handleNext = () => {
+    if (step === 2 && !time) {
+      toast({
+        title: "Select Time",
+        description: "Please select a time slot to continue.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     if (step < 4) {
       setStep(step + 1);
     } else {
@@ -147,9 +157,18 @@ export default function Booking() {
               <div className="space-y-3">
                 <Label>Available Slots</Label>
                 <div className="grid grid-cols-3 gap-3">
-                  {['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map((time) => (
-                    <Button key={time} variant="outline" className="text-xs rounded-xl border-dashed border-2 hover:border-primary hover:bg-primary/5 hover:text-primary">
-                      {time}
+                  {['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map((t) => (
+                    <Button 
+                      key={t} 
+                      variant={time === t ? "default" : "outline"} 
+                      onClick={() => setTime(t)}
+                      className={`text-xs rounded-xl border-2 transition-all ${
+                        time === t 
+                          ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90" 
+                          : "border-dashed hover:border-primary hover:bg-primary/5 hover:text-primary"
+                      }`}
+                    >
+                      {t}
                     </Button>
                   ))}
                 </div>
@@ -216,7 +235,7 @@ export default function Booking() {
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Time</span>
-                    <span className="text-foreground font-medium">09:00 AM</span>
+                    <span className="text-foreground font-medium">{time || "Not selected"}</span>
                   </div>
                   <div className="pt-4 mt-4 border-t flex justify-between items-center">
                     <span className="font-bold">Total</span>

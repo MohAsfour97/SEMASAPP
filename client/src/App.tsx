@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, ProtectedRoute, useAuth } from "@/lib/auth";
 import { OrderProvider } from "@/lib/orders";
+import { ThemeProvider } from "@/lib/theme";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Services from "@/pages/Services";
@@ -52,17 +53,19 @@ function NavigationWrapper() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <OrderProvider>
-            <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
-              <Router />
-              <NavigationWrapper />
-              <Toaster />
-            </div>
-          </OrderProvider>
-        </AuthProvider>
-      </TooltipProvider>
+      <ThemeProvider defaultTheme="light" storageKey="pestguard-ui-theme">
+        <TooltipProvider>
+          <AuthProvider>
+            <OrderProvider>
+              <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
+                <Router />
+                <NavigationWrapper />
+                <Toaster />
+              </div>
+            </OrderProvider>
+          </AuthProvider>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

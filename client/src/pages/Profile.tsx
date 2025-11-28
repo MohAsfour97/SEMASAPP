@@ -1,10 +1,12 @@
-import { User, Bell, Settings, Shield, LogOut, ChevronRight } from "lucide-react";
+import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/lib/auth";
+import { useTheme } from "@/lib/theme";
 
 export default function Profile() {
   const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
@@ -56,8 +58,14 @@ export default function Profile() {
               <Switch />
             </div>
             <div className="flex items-center justify-between">
-              <span className="font-medium">Dark Mode</span>
-              <Switch />
+              <span className="font-medium flex items-center gap-2">
+                {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                Dark Mode
+              </span>
+              <Switch 
+                checked={theme === 'dark'} 
+                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')} 
+              />
             </div>
           </div>
         </section>

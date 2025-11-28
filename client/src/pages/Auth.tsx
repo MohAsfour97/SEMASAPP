@@ -94,7 +94,7 @@ export default function AuthPage() {
       <div className="relative z-30 flex-1 flex flex-col px-6 pt-20 pb-8 max-w-md mx-auto w-full">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-xl mb-4 shadow-primary/25">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-900 to-blue-800 shadow-xl mb-4 shadow-blue-500/20">
             <span className="text-4xl font-black text-white" style={{ 
               WebkitTextStroke: '0.5px rgba(255,255,255,0.3)',
               textShadow: '0 2px 8px rgba(45, 212, 191, 0.4)'

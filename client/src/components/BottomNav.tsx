@@ -32,20 +32,22 @@ export default function BottomNav() {
           const Icon = item.icon;
           
           return (
-            <Link key={item.path} href={item.path}>
-              <a className={cn(
+            <Link 
+              key={item.path} 
+              href={item.path}
+              className={cn(
                 "flex flex-col items-center justify-center w-14 h-14 rounded-full transition-all duration-200 gap-1",
                 isActive 
                   ? "text-primary" 
                   : "text-muted-foreground hover:text-foreground"
-              )}>
-                <Icon 
-                  size={24} 
-                  strokeWidth={isActive ? 2.5 : 2}
-                  className={cn("transition-transform duration-200", isActive && "scale-110")}
-                />
-                <span className="text-[10px] font-medium">{item.label}</span>
-              </a>
+              )}
+            >
+              <Icon 
+                size={24} 
+                strokeWidth={isActive ? 2.5 : 2}
+                className={cn("transition-transform duration-200", isActive && "scale-110")}
+              />
+              <span className="text-[10px] font-medium">{item.label}</span>
             </Link>
           );
         })}

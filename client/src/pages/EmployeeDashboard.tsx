@@ -117,7 +117,7 @@ export default function EmployeeDashboard() {
                             <label className="text-muted-foreground block text-xs mb-1">Location</label>
                             <p className="font-medium">{order.address}</p>
                           </div>
-                          <div className="col-span-2 bg-slate-50 p-3 rounded-lg">
+                          <div className="col-span-2 bg-secondary/50 p-3 rounded-lg">
                             <label className="text-muted-foreground block text-xs mb-1">Problem Description</label>
                             <p className="text-sm">{order.description}</p>
                           </div>

@@ -29,7 +29,7 @@ export default function Profile() {
       <div className="space-y-6">
         <section>
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 pl-1">Account</h3>
-          <div className="bg-white rounded-2xl shadow-sm border border-border/50 overflow-hidden">
+          <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden">
             {[
               { icon: User, label: "Personal Information" },
               { icon: Shield, label: "Security & Privacy" },
@@ -48,7 +48,7 @@ export default function Profile() {
 
         <section>
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 pl-1">Preferences</h3>
-          <div className="bg-white rounded-2xl shadow-sm border border-border/50 overflow-hidden p-4 space-y-4">
+          <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden p-4 space-y-4">
             <div className="flex items-center justify-between">
               <span className="font-medium">Push Notifications</span>
               <Switch defaultChecked />

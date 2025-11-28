@@ -53,7 +53,7 @@ export default function AuthPage() {
       <div className="relative z-30 flex-1 flex flex-col px-6 pt-20 pb-8 max-w-md mx-auto w-full">
         {/* Logo Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-xl mb-4 text-primary">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-card shadow-xl mb-4 text-primary">
             <Shield className="w-8 h-8" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-1">PestGuard</h1>
@@ -61,7 +61,7 @@ export default function AuthPage() {
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-3xl p-6 flex-1 flex flex-col">
+        <div className="bg-card/95 backdrop-blur-xl border border-border/20 shadow-xl rounded-3xl p-6 flex-1 flex flex-col">
           <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "register")} className="w-full mb-6">
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="login">Sign In</TabsTrigger>
@@ -86,7 +86,7 @@ export default function AuthPage() {
                     <Input 
                       id="name" 
                       placeholder="John Doe" 
-                      className="pl-10 h-12 rounded-xl bg-white/50"
+                      className="pl-10 h-12 rounded-xl bg-card/50"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
@@ -103,7 +103,7 @@ export default function AuthPage() {
                     id="email" 
                     type="email" 
                     placeholder="name@example.com" 
-                    className="pl-10 h-12 rounded-xl bg-white/50"
+                    className="pl-10 h-12 rounded-xl bg-card/50"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -119,7 +119,7 @@ export default function AuthPage() {
                     id="password" 
                     type="password" 
                     placeholder="••••••••" 
-                    className="pl-10 h-12 rounded-xl bg-white/50"
+                    className="pl-10 h-12 rounded-xl bg-card/50"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required

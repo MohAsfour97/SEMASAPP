@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
+import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles } from "lucide-react";
 import { Link } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/lib/language";
 import { useAuth } from "@/lib/auth";
 import { useOrders } from "@/lib/orders";
@@ -29,7 +29,11 @@ export default function Home() {
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
   const [scrollY, setScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  const lastScrollY = useRef(0);
+  const observerRef = useRef<IntersectionObserver | null>(null);
   const [inquiryData, setInquiryData] = useState({
     name: "",
     email: "",
@@ -39,11 +43,28 @@ export default function Home() {
   
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      const currentScrollY = window.scrollY;
+      setScrollDirection(currentScrollY > lastScrollY.current ? 'down' : 'up');
+      setScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
     
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleSections(prev => new Set(prev).add(entry.target.id));
+        }
+      });
+    }, { threshold: 0.2, rootMargin: "50px 0px 50px 0px" });
+
+    return () => {
+      observerRef.current?.disconnect();
+    };
   }, []);
 
   const handleInquirySubmit = () => {
@@ -102,7 +123,15 @@ export default function Home() {
 
       <div className="px-4 mt-6 space-y-6 max-w-md mx-auto">
         {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <motion.div 
+          id="section-stats"
+          ref={(el) => {
+            if (el && observerRef.current) observerRef.current.observe(el);
+          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={visibleSections.has('section-stats') ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-3 gap-4">
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-secondary/50 p-2 rounded-full mb-2">
               <Shield className="w-5 h-5 text-primary" />
@@ -124,10 +153,21 @@ export default function Home() {
             <span className="text-xs font-medium text-muted-foreground">{t("home.arrival")}</span>
             <span className="text-lg font-bold text-foreground">&lt;24h</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Active Order */}
-        <section data-testid="section-active-service">
+        <motion.section 
+          id="section-active-service"
+          ref={(el) => {
+            if (el && observerRef.current) observerRef.current.observe(el);
+          }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={visibleSections.has('section-active-service') ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+          style={{
+            y: visibleSections.has('section-active-service') ? scrollY * 0.1 : 0
+          }}
+          data-testid="section-active-service">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg font-semibold" data-testid="heading-active-service">{t("home.activeService")}</h2>
             <Link href="/track">
@@ -184,12 +224,31 @@ export default function Home() {
               </CardContent>
             </Card>
           )}
-        </section>
+        </motion.section>
 
         {/* Popular Services */}
-        <section>
+        <motion.section
+          id="section-popular-services"
+          ref={(el) => {
+            if (el && observerRef.current) observerRef.current.observe(el);
+          }}
+          initial={{ opacity: 0, x: -30 }}
+          animate={visibleSections.has('section-popular-services') ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          style={{
+            y: visibleSections.has('section-popular-services') ? scrollY * 0.15 : 0
+          }}
+        >
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold">{t("home.popularServices")}</h2>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
+                <Sparkles className="w-5 h-5 text-primary" />
+              </motion.div>
+              {t("home.popularServices")}
+            </h2>
             <Link href="/services">
               <span className="text-primary text-sm font-medium cursor-pointer" data-testid="link-view-all-services">{t("home.viewAll")}</span>
             </Link>
@@ -222,10 +281,21 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* Visit Us Section */}
-        <section data-testid="section-visit-us">
+        <motion.section 
+          id="section-visit-us"
+          ref={(el) => {
+            if (el && observerRef.current) observerRef.current.observe(el);
+          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={visibleSections.has('section-visit-us') ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 150 }}
+          style={{
+            y: visibleSections.has('section-visit-us') ? scrollY * 0.08 : 0
+          }}
+          data-testid="section-visit-us">
           <h2 className="text-lg font-semibold mb-3">{t("home.visitUs")}</h2>
           <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden">
             <p className="text-sm text-muted-foreground p-4 pb-2">{t("home.findUsRiyadh")}</p>
@@ -338,8 +408,26 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
       </div>
+
+      <style>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+      `}</style>
     </div>
   );
 }

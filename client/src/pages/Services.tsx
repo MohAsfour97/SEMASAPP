@@ -12,7 +12,7 @@ const servicesList = [
     id: "general",
     title: "General Pest Control",
     description: "Comprehensive protection against common household pests including ants, spiders, and roaches.",
-    price: "$149",
+    price: "149",
     features: ["Interior & Exterior Treatment", "Web Removal", "90-Day Guarantee"],
     icon: Shield,
     color: "text-primary",
@@ -22,7 +22,7 @@ const servicesList = [
     id: "termite",
     title: "Termite Defense",
     description: "Advanced termite detection and elimination system to protect your home's structure.",
-    price: "$299",
+    price: "299",
     features: ["Thorough Inspection", "Bait Station Installation", "Annual Monitoring"],
     icon: Bug,
     color: "text-orange-600",
@@ -32,7 +32,7 @@ const servicesList = [
     id: "rodent",
     title: "Rodent Exclusion",
     description: "Humane removal and entry point sealing to keep rats and mice out for good.",
-    price: "$199",
+    price: "199",
     features: ["Entry Point Inspection", "Trapping & Removal", "Sanitization"],
     icon: Rat,
     color: "text-slate-600",
@@ -42,7 +42,7 @@ const servicesList = [
     id: "mosquito",
     title: "Mosquito Shield",
     description: "Seasonal yard treatment to reduce mosquito populations and reclaim your outdoor space.",
-    price: "$89",
+    price: "89",
     features: ["Yard Fogging", "Larvicide Application", "Monthly Service"],
     icon: Bug,
     color: "text-green-600",
@@ -143,7 +143,7 @@ export default function Services() {
               <div className="flex items-center justify-between pl-16 mt-4 border-t border-border/50 pt-4">
                 <div>
                   <span className="text-xs text-muted-foreground block">{t("common.startingAt")}</span>
-                  <span className="text-xl font-bold text-primary">{service.price}</span>
+                  <span className="text-xl font-bold text-primary">{service.price} {t("common.sar")}</span>
                 </div>
                 <Link 
                   href="/book"

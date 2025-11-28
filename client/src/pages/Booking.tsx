@@ -275,7 +275,7 @@ export default function Booking() {
                   </div>
                   <div className="pt-4 mt-4 border-t flex justify-between items-center">
                     <span className="font-bold">Total</span>
-                    <span className="text-xl font-bold text-primary">$149.00</span>
+                    <span className="text-xl font-bold text-primary">149 {t("common.sar")}</span>
                   </div>
                 </div>
               </div>

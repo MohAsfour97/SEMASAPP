@@ -30,11 +30,8 @@ export default function Home() {
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
   const { toast } = useToast();
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set(['section-stats', 'section-active-service', 'section-popular-services', 'section-visit-us']));
   const [inquiryOpen, setInquiryOpen] = useState(false);
-  const lastScrollY = useRef(0);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [inquiryData, setInquiryData] = useState({
     name: "",
@@ -43,18 +40,6 @@ export default function Home() {
     message: ""
   });
   
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollDirection(currentScrollY > lastScrollY.current ? 'down' : 'up');
-      setScrollY(currentScrollY);
-      lastScrollY.current = currentScrollY;
-    };
-    
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -96,21 +81,12 @@ export default function Home() {
     <div className="pb-24">
       {/* Hero Section */}
       <div className="relative h-[40vh] w-full overflow-hidden rounded-b-[2rem] shadow-lg">
-        <div 
-          style={{
-            transform: `translateY(${scrollY * 0.5}px) scale(${1 + scrollY * 0.0001})`,
-            filter: `blur(${Math.min(scrollY * 0.05, 8)}px)`,
-            transition: 'transform 0.1s ease-out, filter 0.1s ease-out'
-          }}
-          className="absolute inset-0 origin-center"
-        >
-          <img 
-            src={heroImage} 
-            alt="Clean home" 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white" style={{ opacity: 1 - scrollY * 0.003 }}>
+        <img 
+          src={heroImage} 
+          alt="Clean home" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -177,9 +153,6 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={visibleSections.has('section-active-service') ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
-          style={{
-            y: visibleSections.has('section-active-service') ? scrollY * 0.1 : 0
-          }}
           data-testid="section-active-service">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg font-semibold" data-testid="heading-active-service">{t("home.activeService")}</h2>
@@ -248,9 +221,6 @@ export default function Home() {
           initial={{ opacity: 0, x: -30 }}
           animate={visibleSections.has('section-popular-services') ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            y: visibleSections.has('section-popular-services') ? scrollY * 0.15 : 0
-          }}
         >
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -305,9 +275,6 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={visibleSections.has('section-visit-us') ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6, type: "spring", stiffness: 150 }}
-          style={{
-            y: visibleSections.has('section-visit-us') ? scrollY * 0.08 : 0
-          }}
           data-testid="section-visit-us">
           <h2 className="text-lg font-semibold mb-3">{t("home.visitUs")}</h2>
           <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden">

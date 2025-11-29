@@ -187,33 +187,83 @@ export default function Booking() {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-6"
             >
-              <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  className="rounded-md mx-auto"
-                />
+              {/* Selected Date Display */}
+              {date && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-4 border border-primary/20"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                      <CalendarIcon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{t("bookingDetails.selectedDate")}</p>
+                      <p className="text-lg font-bold text-foreground">{format(date, "EEEE, MMMM do")}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Calendar Picker */}
+              <div className="bg-card rounded-2xl p-6 shadow-lg border border-border/50 backdrop-blur-sm">
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t("bookingDetails.selectDate")}</h3>
+                  <div className="bg-background/40 rounded-xl p-4 overflow-x-auto">
+                    <div className="flex justify-center">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        className="rounded-md [&_table]:w-full [&_td]:p-0 [&_th]:text-xs [&_th]:font-semibold [&_th]:text-muted-foreground [&_tr]:gap-1 [&_td]:gap-1"
+                        disabled={(d) => d < new Date(new Date().setDate(new Date().getDate() - 1))}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              <div className="space-y-3">
-                <Label>{t("bookingDetails.availableSlots")}</Label>
-                <div className="grid grid-cols-3 gap-3">
-                  {['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map((slot) => (
-                    <Button 
-                      key={slot} 
-                      variant={time === slot ? "default" : "outline"} 
-                      onClick={() => setTime(slot)}
-                      className={`text-xs rounded-xl border-2 transition-all ${
-                        time === slot 
-                          ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90" 
-                          : "border-dashed hover:border-primary hover:bg-primary/5 hover:text-primary"
-                      }`}
-                      data-testid={`button-slot-${slot}`}
+              {/* Time Slots */}
+              <div className="bg-card rounded-2xl p-6 shadow-lg border border-border/50 backdrop-blur-sm">
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t("bookingDetails.availableSlots")}</h3>
+                  
+                  {time && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-primary/10 rounded-lg p-3 border border-primary/20 flex items-center gap-2"
                     >
-                      {slot}
-                    </Button>
-                  ))}
+                      <Check className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-medium text-primary">{t("bookingDetails.selectedTime")}: <span className="font-bold">{time}</span></span>
+                    </motion.div>
+                  )}
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    {['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map((slot) => (
+                      <motion.div
+                        key={slot}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button 
+                          onClick={() => setTime(slot)}
+                          className={`w-full h-20 rounded-2xl transition-all duration-200 font-semibold text-base border-2 ${
+                            time === slot 
+                              ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30" 
+                              : "border-border bg-background hover:bg-primary/5 hover:border-primary/50 text-foreground"
+                          }`}
+                          data-testid={`button-slot-${slot}`}
+                        >
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-sm">{slot}</span>
+                            {time === slot && <Check className="w-4 h-4" />}
+                          </div>
+                        </Button>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>

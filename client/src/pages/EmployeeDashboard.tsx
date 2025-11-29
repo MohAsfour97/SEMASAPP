@@ -211,13 +211,13 @@ export default function EmployeeDashboard() {
                   
                   {/* Full Details Section for My Jobs */}
                   <div className="bg-secondary/10 p-3 rounded-lg mb-4 text-sm">
-                    <p className="font-medium text-foreground mb-1">Job Details:</p>
+                    <p className="font-medium text-foreground mb-1">{t("dashboard.jobDetails")}:</p>
                     <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                       <span>Service:</span>
+                       <span>{t("dashboard.service")}:</span>
                        <span className="text-foreground font-medium">{order.serviceType}</span>
-                       <span>Date:</span>
+                       <span>{t("dashboard.date")}:</span>
                        <span className="text-foreground font-medium">{format(new Date(order.date), "MMM d, yyyy")}</span>
-                       <span className="col-span-2 mt-1 block border-t border-border/50 pt-1">Description:</span>
+                       <span className="col-span-2 mt-1 block border-t border-border/50 pt-1">{t("dashboard.description")}:</span>
                        <span className="col-span-2 text-foreground italic">"{order.description}"</span>
                     </div>
                   </div>

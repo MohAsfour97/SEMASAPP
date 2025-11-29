@@ -136,7 +136,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("pestguard_user");
+    localStorage.removeItem("semas_user");
+    localStorage.removeItem("semas_user_profiles");
     toast({ title: "Logged Out", description: "See you soon!" });
     setLocation("/auth");
   };

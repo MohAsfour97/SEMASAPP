@@ -73,7 +73,7 @@ export default function Profile() {
     if (!editName.trim()) {
       toast({
         title: t("common.error"),
-        description: "Name cannot be empty",
+        description: t("profile.nameCannotBeEmpty"),
         variant: "destructive"
       });
       return;
@@ -87,7 +87,7 @@ export default function Profile() {
     setShowPersonalInfo(false);
     toast({
       title: t("common.success"),
-      description: "Personal information updated successfully"
+      description: t("profile.personalInfoUpdated")
     });
   };
 
@@ -221,7 +221,7 @@ export default function Profile() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-phone">Phone Number</Label>
+                <Label htmlFor="edit-phone">{t("profile.phoneNumber")}</Label>
                 <Input
                   id="edit-phone"
                   type="tel"

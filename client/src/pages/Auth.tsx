@@ -156,6 +156,7 @@ export default function AuthPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
+                      data-testid="input-name-auth"
                     />
                   </div>
                 </div>
@@ -173,6 +174,7 @@ export default function AuthPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    data-testid="input-email-auth"
                   />
                 </div>
               </div>
@@ -189,6 +191,7 @@ export default function AuthPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    data-testid="input-password-auth"
                   />
                 </div>
               </div>

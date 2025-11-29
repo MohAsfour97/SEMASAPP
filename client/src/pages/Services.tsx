@@ -6,6 +6,7 @@ import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOrders } from "@/lib/orders";
+import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
 
 const getServicesList = (t: any) => [
   {
@@ -118,35 +119,51 @@ export default function Services() {
   };
 
   return (
-    <div className="pb-24 pt-8 px-4 max-w-md mx-auto" ref={containerRef}>
-      {/* Header Section with Enhanced Typography */}
-      <motion.div 
-        className="mb-8"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{ y: scrollY * 0.15 }}
-      >
-        <div className="flex items-center gap-2 mb-2">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          >
-            <Sparkles className="w-5 h-5 text-primary" />
-          </motion.div>
-          <h1 className="text-3xl font-bold" style={{ 
-            color: '#ffffff',
-            WebkitTextStroke: '0.5px #2dd4bf',
-            textShadow: '0 0 10px #2dd4bf, 0 0 18px #14b8a6',
-            paintOrder: 'stroke fill'
-          }}>{t("servicesDetails.ourServices")}</h1>
+    <div className="pb-24 pt-0 px-0 max-w-md mx-auto" ref={containerRef}>
+      {/* Hero Section with Background */}
+      <div className="relative h-40 w-full overflow-hidden rounded-b-3xl mb-0">
+        <div
+          style={{
+            transform: `translateY(${scrollY * 0.5}px) scale(${1 + scrollY * 0.0001})`,
+            filter: `blur(${Math.min(scrollY * 0.05, 8)}px)`,
+            transition: 'transform 0.1s ease-out, filter 0.1s ease-out'
+          }}
+          className="absolute inset-0 origin-center"
+        >
+          <img 
+            src={heroImage} 
+            alt="Services background" 
+            className="w-full h-full object-cover"
+          />
         </div>
-        <p className="text-muted-foreground text-sm">{t("servicesDetails.professionalSolutions")}</p>
-      </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              >
+                <Sparkles className="w-5 h-5 text-cyan-300" />
+              </motion.div>
+              <h1 className="text-2xl font-bold" style={{ 
+                color: '#ffffff',
+                WebkitTextStroke: '0.5px #2dd4bf',
+                textShadow: '0 0 10px #2dd4bf, 0 0 18px #14b8a6',
+                paintOrder: 'stroke fill'
+              }}>{t("servicesDetails.ourServices")}</h1>
+            </div>
+            <p className="text-white/90 text-xs">{t("servicesDetails.professionalSolutions")}</p>
+          </motion.div>
+        </div>
+      </div>
 
       {/* Enhanced Search Bar */}
       <motion.div 
-        className="relative mb-8"
+        className="relative mb-8 mt-6 px-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.5 }}
@@ -173,7 +190,7 @@ export default function Services() {
       </motion.div>
 
       {/* Services Grid */}
-      <div className="space-y-5">
+      <div className="space-y-5 px-4">
         {filteredServices.length === 0 ? (
           <motion.div 
             className="text-center py-12 text-muted-foreground"

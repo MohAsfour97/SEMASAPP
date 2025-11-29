@@ -25,7 +25,7 @@ const getServicesList = (t: any) => [
     descriptionKey: "servicesDetails.termiteDesc",
     price: "299",
     featuresKeys: ["servicesDetails.thoroughInspection", "servicesDetails.baitStation", "servicesDetails.annualMonitoring"],
-    icon: Bug,
+    icon: Search,
     color: "text-orange-600",
     bg: "bg-orange-100",
   },

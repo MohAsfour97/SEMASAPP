@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/lib/language";
 import { useAuth } from "@/lib/auth";
 import { useOrders } from "@/lib/orders";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -28,6 +29,7 @@ export default function Home() {
   const { t, language } = useLanguage();
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
+  const { toast } = useToast();
   const [scrollY, setScrollY] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set(['section-stats', 'section-active-service', 'section-popular-services', 'section-visit-us']));
@@ -68,7 +70,18 @@ export default function Home() {
   }, []);
 
   const handleInquirySubmit = () => {
-    alert("Inquiry submitted successfully!");
+    if (!inquiryData.name || !inquiryData.email || !inquiryData.message) {
+      toast({
+        title: t("home.inquiryIncomplete"),
+        description: t("home.fillAllFields"),
+        variant: "destructive"
+      });
+      return;
+    }
+    toast({
+      title: t("home.inquirySubmitted"),
+      description: t("home.thankYouInquiry")
+    });
     setInquiryData({ name: "", email: "", phone: "", message: "" });
     setInquiryOpen(false);
   };

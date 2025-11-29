@@ -315,7 +315,7 @@ export default function Services() {
                     >
                       <motion.div
                         className="relative overflow-hidden"
-                        animate={{ boxShadow: ["0 4px 8px rgba(0,0,0,0.1)", "0 8px 16px rgba(var(--primary-rgb), 0.3)", "0 4px 8px rgba(0,0,0,0.1)"] }}
+                        animate={{ boxShadow: ["0 4px 8px rgba(0,0,0,0.1)", "0 8px 16px rgba(37, 99, 235, 0.3)", "0 4px 8px rgba(0,0,0,0.1)"] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
                         <Button 

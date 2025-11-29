@@ -197,20 +197,21 @@ export default function Booking() {
               </div>
               
               <div className="space-y-3">
-                <Label>Available Slots</Label>
+                <Label>{t("bookingDetails.availableSlots")}</Label>
                 <div className="grid grid-cols-3 gap-3">
-                  {['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map((t) => (
+                  {['09:00 AM', '11:00 AM', '02:00 PM', '04:00 PM'].map((slot) => (
                     <Button 
-                      key={t} 
-                      variant={time === t ? "default" : "outline"} 
-                      onClick={() => setTime(t)}
+                      key={slot} 
+                      variant={time === slot ? "default" : "outline"} 
+                      onClick={() => setTime(slot)}
                       className={`text-xs rounded-xl border-2 transition-all ${
-                        time === t 
+                        time === slot 
                           ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90" 
                           : "border-dashed hover:border-primary hover:bg-primary/5 hover:text-primary"
                       }`}
+                      data-testid={`button-slot-${slot}`}
                     >
-                      {t}
+                      {slot}
                     </Button>
                   ))}
                 </div>

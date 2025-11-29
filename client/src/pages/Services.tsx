@@ -6,7 +6,7 @@ import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOrders } from "@/lib/orders";
-import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
+import heroImage from "@assets/generated_images/pest_control_indoor_service_treatment.png";
 
 const getServicesList = (t: any) => [
   {

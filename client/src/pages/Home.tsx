@@ -30,8 +30,10 @@ export default function Home() {
   const { user, getUserById } = useAuth();
   const { getOrdersByCustomer } = useOrders();
   const { toast } = useToast();
+  const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set(['section-stats', 'section-active-service', 'section-popular-services', 'section-visit-us']));
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  const lastScrollY = useRef(0);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [inquiryData, setInquiryData] = useState({
     name: "",
@@ -40,6 +42,17 @@ export default function Home() {
     message: ""
   });
   
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
+    };
+    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -81,12 +94,21 @@ export default function Home() {
     <div className="pb-24">
       {/* Hero Section */}
       <div className="relative h-[40vh] w-full overflow-hidden rounded-b-[2rem] shadow-lg">
-        <img 
-          src={heroImage} 
-          alt="Clean home" 
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white">
+        <div 
+          style={{
+            transform: `translateY(${scrollY * 0.5}px) scale(${1 + scrollY * 0.0001})`,
+            filter: `blur(${Math.min(scrollY * 0.05, 8)}px)`,
+            transition: 'transform 0.1s ease-out, filter 0.1s ease-out'
+          }}
+          className="absolute inset-0 origin-center"
+        >
+          <img 
+            src={heroImage} 
+            alt="Clean home" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 text-white" style={{ opacity: 1 - scrollY * 0.003 }}>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

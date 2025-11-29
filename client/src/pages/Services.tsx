@@ -15,7 +15,7 @@ const getServicesList = (t: any) => [
     descriptionKey: "servicesDetails.generalPestDesc",
     price: "149",
     featuresKeys: ["servicesDetails.interiorExterior", "servicesDetails.webRemoval", "servicesDetails.guarantee"],
-    icon: Shield,
+    icon: Bug,
     color: "text-primary",
     bg: "bg-primary/10",
   },

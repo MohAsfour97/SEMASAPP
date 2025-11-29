@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles, Search } from "lucide-react";
+import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles, Search, Bug } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/lib/language";
@@ -276,7 +276,7 @@ export default function Home() {
           <div className="space-y-3">
             {[
               { id: "termite", nameKey: "servicesDetails.termiteInspection", price: "99", icon: Search },
-              { id: "general", nameKey: "servicesDetails.generalPestControl", price: "149", icon: CheckCircle },
+              { id: "general", nameKey: "servicesDetails.generalPestControl", price: "149", icon: Bug },
             ].map((service, i) => (
               <motion.div 
                 key={i}

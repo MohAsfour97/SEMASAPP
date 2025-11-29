@@ -19,9 +19,10 @@ export default function HeaderControls() {
   const { theme, setTheme } = useTheme();
 
   const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const isArabic = language === "ar";
 
   return (
-    <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
+    <div className={`fixed top-4 z-40 flex items-center gap-2 ${isArabic ? "left-4" : "right-4"}`}>
       {/* Language Toggle */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

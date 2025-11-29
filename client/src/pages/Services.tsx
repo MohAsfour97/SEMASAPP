@@ -134,7 +134,12 @@ export default function Services() {
           >
             <Sparkles className="w-5 h-5 text-primary" />
           </motion.div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">{t("servicesDetails.ourServices")}</h1>
+          <h1 className="text-3xl font-bold" style={{ 
+            color: '#ffffff',
+            WebkitTextStroke: '0.5px #2dd4bf',
+            textShadow: '0 0 10px #2dd4bf, 0 0 18px #14b8a6',
+            paintOrder: 'stroke fill'
+          }}>{t("servicesDetails.ourServices")}</h1>
         </div>
         <p className="text-muted-foreground text-sm">{t("servicesDetails.professionalSolutions")}</p>
       </motion.div>
@@ -313,31 +318,15 @@ export default function Services() {
                       whileHover={{ scale: 1.1, y: -3 }}
                       whileTap={{ scale: 0.92 }}
                     >
-                      <motion.div
-                        className="relative overflow-hidden"
-                        animate={{ boxShadow: ["0 4px 8px rgba(0,0,0,0.1)", "0 8px 16px rgba(37, 99, 235, 0.3)", "0 4px 8px rgba(0,0,0,0.1)"] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                      <Button 
+                        size="sm" 
+                        className="rounded-full px-5 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-medium shadow-md hover:shadow-xl transition-all"
                       >
-                        <Button 
-                          size="sm" 
-                          className="rounded-full px-5 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-medium shadow-md hover:shadow-xl transition-all relative overflow-hidden group/btn"
-                        >
-                          <motion.div 
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                            animate={{ x: [-100, 100] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          />
-                          <span className="relative flex items-center gap-2">
-                            {t("servicesDetails.bookNow")} 
-                            <motion.div
-                              animate={{ x: [0, 3, 0] }}
-                              transition={{ duration: 1.5, repeat: Infinity }}
-                            >
-                              <ArrowRight className="w-4 h-4" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
-                            </motion.div>
-                          </span>
-                        </Button>
-                      </motion.div>
+                        <span className="flex items-center gap-2">
+                          {t("servicesDetails.bookNow")} 
+                          <ArrowRight className="w-4 h-4" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
+                        </span>
+                      </Button>
                     </motion.div>
                   </Link>
                 </div>

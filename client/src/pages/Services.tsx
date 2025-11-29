@@ -318,9 +318,9 @@ export default function Services() {
 
                 {/* Bottom Section - Price and CTA */}
                 <div className="flex items-center justify-between pt-5 border-t border-border/50 relative overflow-hidden rounded-b-xl">
-                  {/* Background Image with Blur and Low Opacity */}
+                  {/* Background Image with Light Blur and Moderate Opacity */}
                   <div 
-                    className="absolute inset-0 -z-10 opacity-15 blur-md"
+                    className="absolute inset-0 -z-10 opacity-40 blur-sm"
                     style={{
                       backgroundImage: `url(${service.bgImage})`,
                       backgroundSize: 'cover',

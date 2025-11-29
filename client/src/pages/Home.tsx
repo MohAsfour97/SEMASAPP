@@ -145,21 +145,36 @@ export default function Home() {
           className="grid grid-cols-3 gap-4">
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-secondary/50 p-2 rounded-full mb-2">
-              <Shield className="w-5 h-5 text-primary" />
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
+                <Shield className="w-5 h-5 text-primary" />
+              </motion.div>
             </div>
             <span className="text-xs font-medium text-muted-foreground">{t("home.protected")}</span>
             <span className="text-lg font-bold text-foreground">365d</span>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-orange-100 p-2 rounded-full mb-2">
-              <Star className="w-5 h-5 text-orange-500" />
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
+                <Star className="w-5 h-5 text-orange-500" />
+              </motion.div>
             </div>
             <span className="text-xs font-medium text-muted-foreground">{t("home.rating")}</span>
             <span className="text-lg font-bold text-foreground">4.9</span>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-blue-100 p-2 rounded-full mb-2">
-              <Clock className="w-5 h-5 text-blue-500" />
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              >
+                <Clock className="w-5 h-5 text-blue-500" />
+              </motion.div>
             </div>
             <span className="text-xs font-medium text-muted-foreground">{t("home.arrival")}</span>
             <span className="text-lg font-bold text-foreground">&lt;24h</span>

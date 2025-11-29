@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOrders } from "@/lib/orders";
 import heroImage from "@assets/generated_images/pest_control_indoor_service_treatment.png";
+import generalBg from "@assets/generated_images/general_pest_control_spray_treatment.png";
+import termiteBg from "@assets/generated_images/termite_inspection_and_wood_damage.png";
+import rodentBg from "@assets/generated_images/rodent_trapping_and_exclusion.png";
+import mosquitoBg from "@assets/generated_images/mosquito_yard_fogging_service.png";
 
 const getServicesList = (t: any) => [
   {
@@ -18,6 +22,7 @@ const getServicesList = (t: any) => [
     icon: Bug,
     color: "text-primary",
     bg: "bg-primary/10",
+    bgImage: generalBg,
   },
   {
     id: "termite",
@@ -28,6 +33,7 @@ const getServicesList = (t: any) => [
     icon: Search,
     color: "text-orange-600",
     bg: "bg-orange-100",
+    bgImage: termiteBg,
   },
   {
     id: "rodent",
@@ -38,6 +44,7 @@ const getServicesList = (t: any) => [
     icon: Rat,
     color: "text-slate-600",
     bg: "bg-slate-100",
+    bgImage: rodentBg,
   },
   {
     id: "mosquito",
@@ -48,6 +55,7 @@ const getServicesList = (t: any) => [
     icon: Shield,
     color: "text-green-600",
     bg: "bg-green-100",
+    bgImage: mosquitoBg,
   }
 ];
 
@@ -309,10 +317,19 @@ export default function Services() {
                 </div>
 
                 {/* Bottom Section - Price and CTA */}
-                <div className="flex items-center justify-between pt-5 border-t border-border/50">
+                <div className="flex items-center justify-between pt-5 border-t border-border/50 relative overflow-hidden rounded-b-xl">
+                  {/* Background Image with Blur and Low Opacity */}
+                  <div 
+                    className="absolute inset-0 -z-10 opacity-15 blur-md"
+                    style={{
+                      backgroundImage: `url(${service.bgImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  />
                   <motion.div
                     whileHover={{ scale: 1.08 }}
-                    className="cursor-default group/price"
+                    className="cursor-default group/price relative z-10"
                   >
                     <span className="text-xs text-muted-foreground block mb-1 font-medium">{t("common.startingAt")}</span>
                     <motion.div 
@@ -334,6 +351,7 @@ export default function Services() {
                     <motion.div
                       whileHover={{ scale: 1.1, y: -3 }}
                       whileTap={{ scale: 0.92 }}
+                      className="relative z-10"
                     >
                       <Button 
                         size="sm" 

@@ -17,6 +17,7 @@ import AuthPage from "@/pages/Auth";
 import EmployeeDashboard from "@/pages/EmployeeDashboard";
 import Chat from "@/pages/Chat";
 import BottomNav from "@/components/BottomNav";
+import HeaderControls from "@/components/HeaderControls";
 
 // Dynamic Home Component based on Role
 function HomeRouter() {
@@ -51,6 +52,13 @@ function NavigationWrapper() {
   return <BottomNav />;
 }
 
+function HeaderWrapper() {
+  const [location] = useLocation();
+  // Hide header controls on auth page only
+  if (location === "/auth") return null;
+  return <HeaderControls />;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -60,6 +68,7 @@ function App() {
             <AuthProvider>
               <OrderProvider>
                 <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
+                  <HeaderWrapper />
                   <Router />
                   <NavigationWrapper />
                   <Toaster />

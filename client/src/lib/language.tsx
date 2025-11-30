@@ -162,6 +162,13 @@ export const translations = {
       typeMessage: "Type a message...",
       noMessages: "No messages yet",
     },
+    // Support
+    support: {
+      customerSupport: "Customer Support",
+      semasSupport: "SEMAS Support",
+      aiAssistant: "AI Assistant • Always Available",
+      askQuestion: "Ask your question...",
+    },
     // Services Details
     servicesDetails: {
       ourServices: "Our Services",
@@ -450,6 +457,13 @@ export const translations = {
       sendMessage: "إرسال الرسالة",
       typeMessage: "اكتب رسالة...",
       noMessages: "لا توجد رسائل بعد",
+    },
+    // Support
+    support: {
+      customerSupport: "دعم العملاء",
+      semasSupport: "دعم SEMAS",
+      aiAssistant: "مساعد ذكي • متاح دائماً",
+      askQuestion: "اسأل سؤالك...",
     },
     // Services Details
     servicesDetails: {

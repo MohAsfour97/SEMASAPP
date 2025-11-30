@@ -10,10 +10,10 @@ import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { useToast } from "@/hooks/use-toast";
 
-const getSupportResponses = (question: string, t: any) => {
+const getSupportResponses = (question: string, language: string, t: any) => {
   const lowerQ = question.toLowerCase();
   
-  const responses: Record<string, string> = {
+  const responsesEn: Record<string, string> = {
     // Booking related
     "how do i book": "You can book a service by clicking the 'Book' in the navigation menu. Then select your preferred service type, date, time, and provide your address. Finally, confirm the booking!",
     "how to book": "Navigate to the Book section, select a service, choose your date and time slot, enter your address and problem description, review the summary, and complete the booking.",
@@ -49,13 +49,54 @@ const getSupportResponses = (question: string, t: any) => {
     "contact": "You can reach us through this chat, WhatsApp, or visit our office in Riyadh.",
   };
 
+  const responsesAr: Record<string, string> = {
+    // Booking related
+    "كيف احجز": "يمكنك حجز خدمة بالنقر على 'حجز' في قائمة التنقل. ثم حدد نوع الخدمة والتاريخ والوقت وعنوانك. وأخيراً قم بتأكيد الحجز!",
+    "كيفية الحجز": "انتقل إلى قسم الحجز، حدد خدمة، اختر تاريخاً ووقتاً، أدخل عنوانك ووصف المشكلة، راجع الملخص واكمل الحجز.",
+    "متى يمكن الحجز": "يمكنك حجز الخدمات من الاثنين إلى الأحد. فنيونا متاحون من 9:00 صباحاً إلى 5:00 مساءً. اختر أي فترة زمنية متاحة أثناء الحجز.",
+    
+    // Services
+    "ما الخدمات": "نحن نقدم: مكافحة الآفات العامة، فحص الأرضة، مكافحة القوارض، ودرع البعوض. لكل خدمة ميزات وأسعار مختلفة.",
+    "مكافحة الآفات": "تشمل مكافحة الآفات العامة معالجة داخلية وخارجية وإزالة الأنسجة وضمان رضا 30 يوماً. يبدأ من 149 ريال.",
+    "فحص الأرضة": "يشمل الفحص الشامل وتركيب محطات الطعم والمراقبة السنوية. يبدأ من 299 ريال.",
+    "مكافحة القوارض": "يشمل فحص نقاط الدخول والقبض والإزالة والتعقيم. يبدأ من 199 ريال.",
+    "درع البعوض": "يشمل الرش في الفناء ومعالجة اليرقات وصيانة الخدمة الشهرية. يبدأ من 89 ريال.",
+    
+    // Tracking
+    "كيف أتابع": "انتقل إلى قسم التتبع لرؤية طلباتك النشطة وحالتها في الوقت الفعلي. يمكنك رؤية تفاصيل الفني والاتصال به عبر الدردشة.",
+    "تتبع الطلب": "انقر على التتبع في التنقل لعرض جميع طلباتك. ستشاهد الطلبات النشطة مع معلومات الفني والطلبات المكتملة مع التقييمات.",
+    
+    // Payment
+    "طريقة الدفع": "نقبل بطاقات الائتمان والخصم لجميع المدفوعات. يتم معالجة الدفع بأمان أثناء الدفع.",
+    "السعر": "تختلف الأسعار حسب الخدمة. مكافحة الآفات: 149 ريال، الأرضة: 299 ريال، القوارض: 199 ريال، البعوض: 89 ريال.",
+    
+    // Chat
+    "هل يمكن أرسال": "نعم! يمكنك الدردشة مع الفني المعين من خلال ميزة الدردشة في تفاصيل طلبك النشط.",
+    "دردشة": "انقر على أي طلب نشط واختر رمز الدردشة للرسائل إلى الفني مباشرة.",
+    
+    // Technical
+    "مشكلة": "نعتذر عن المشكلة التي تواجهها. يرجى وصفها وسنساعدك! غالباً يمكن حل المشاكل الشائعة بتحديث التطبيق.",
+    "خطأ": "إذا وجدت خطأ، يرجى وصف ما حدث وما كنت تتوقعه. سنحقق ونصلحه!",
+    "لا يعمل": "جرب تحديث الصفحة أو إعادة تشغيل التطبيق. إذا استمرت المشكلة، تواصل مع الدعم.",
+    
+    // General
+    "مساعدة": "أنا هنا للمساعدة! يمكنك السؤال عن الحجز والخدمات والتتبع والدفع أو أي مشاكل.",
+    "دعم": "فريق الدعم متاح 24/7. يمكنك الدردشة معنا هنا أو التواصل عبر واتس آب للمسائل الاستعجالية.",
+    "التواصل": "يمكنك الوصول إلينا عبر هذه الدردشة أو واتس آب أو زيارة مكتبنا في الرياض.",
+  };
+
+  const responses = language === 'ar' ? responsesAr : responsesEn;
+
   for (const [key, response] of Object.entries(responses)) {
     if (lowerQ.includes(key)) {
       return response;
     }
   }
   
-  return "I'm here to help! Try asking about booking services, how to track orders, available services, pricing, or any issues you're facing.";
+  const defaultEn = "I'm here to help! Try asking about booking services, how to track orders, available services, pricing, or any issues you're facing.";
+  const defaultAr = "أنا هنا للمساعدة! جرب السؤال عن حجز الخدمات أو تتبع الطلبات أو الخدمات المتاحة أو الأسعار أو أي مشاكل.";
+  
+  return language === 'ar' ? defaultAr : defaultEn;
 };
 
 export default function Profile() {
@@ -69,8 +110,14 @@ export default function Profile() {
   const [showSupport, setShowSupport] = useState(false);
   const [editName, setEditName] = useState(user?.name || "");
   const [editPhone, setEditPhone] = useState(user?.phone || "");
+  const getInitialGreeting = () => {
+    return language === 'ar' 
+      ? { id: '1', text: "مرحباً! 👋 كيف يمكنني مساعدتك اليوم؟", sender: 'bot' as const }
+      : { id: '1', text: "Hi! 👋 How can I help you today?", sender: 'bot' as const };
+  };
+
   const [supportMessages, setSupportMessages] = useState<Array<{id: string, text: string, sender: 'user' | 'bot'}>>([
-    { id: '1', text: "Hi! 👋 How can I help you today?", sender: 'bot' }
+    getInitialGreeting()
   ]);
   const [supportInput, setSupportInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -162,7 +209,7 @@ export default function Profile() {
     setSupportInput("");
 
     setTimeout(() => {
-      const botResponse = getSupportResponses(userMessage, t);
+      const botResponse = getSupportResponses(userMessage, language, t);
       setSupportMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: botResponse, sender: 'bot' }]);
     }, 300);
   };
@@ -264,7 +311,7 @@ export default function Profile() {
             >
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-5 h-5 text-primary" />
-                <span className="font-medium">Customer Support</span>
+                <span className="font-medium">{t("support.customerSupport")}</span>
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
             </button>
@@ -383,8 +430,8 @@ export default function Profile() {
                     <MessageCircle className="w-5 h-5 text-primary" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-lg font-bold truncate">SEMAS Support</h2>
-                    <p className="text-xs text-muted-foreground">AI Assistant • Always Available</p>
+                    <h2 className="text-lg font-bold truncate">{t("support.semasSupport")}</h2>
+                    <p className="text-xs text-muted-foreground">{t("support.aiAssistant")}</p>
                   </div>
                 </div>
                 <button
@@ -427,7 +474,7 @@ export default function Profile() {
                     value={supportInput}
                     onChange={(e) => setSupportInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendSupportMessage()}
-                    placeholder="Ask your question..."
+                    placeholder={t("support.askQuestion")}
                     className="flex-1 h-11 rounded-full bg-card border-border/50 text-base"
                     data-testid="input-support-message"
                   />

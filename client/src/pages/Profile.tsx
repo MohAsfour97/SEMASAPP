@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
-import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun, Camera, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { User, Bell, Settings, Shield, LogOut, ChevronRight, Moon, Sun, Camera, X, Send, MessageCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -9,16 +10,78 @@ import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { useToast } from "@/hooks/use-toast";
 
+const getSupportResponses = (question: string, t: any) => {
+  const lowerQ = question.toLowerCase();
+  
+  const responses: Record<string, string> = {
+    // Booking related
+    "how do i book": "You can book a service by clicking the 'Book' in the navigation menu. Then select your preferred service type, date, time, and provide your address. Finally, confirm the booking!",
+    "how to book": "Navigate to the Book section, select a service, choose your date and time slot, enter your address and problem description, review the summary, and complete the booking.",
+    "when can i book": "You can book services Monday to Sunday. Our technicians are available from 9:00 AM to 5:00 PM. Select any available time slot during your booking.",
+    
+    // Services
+    "what services": "We offer: General Pest Control, Termite Inspection, Rodent Control, and Mosquito Shield. Each service has different features and pricing.",
+    "general pest control": "General Pest Control includes interior and exterior treatment, web removal, and a 30-day satisfaction guarantee. Starting at 149 SAR.",
+    "termite inspection": "Includes thorough inspection, bait station installation, and annual monitoring service. Starting at 299 SAR.",
+    "rodent control": "Includes entry point inspection, trapping and removal, and sanitization. Starting at 199 SAR.",
+    "mosquito shield": "Includes yard fogging, larvicide treatment, and monthly service maintenance. Starting at 89 SAR.",
+    
+    // Tracking
+    "how to track": "Go to the Track section to see your active orders and their real-time status. You can see your technician details and contact them via chat.",
+    "track order": "Click on Track in the navigation to view all your orders. You'll see active orders with technician info and completed orders with ratings.",
+    
+    // Payment
+    "payment method": "We accept credit/debit cards for all payments. Payment is processed securely during checkout.",
+    "price": "Prices vary by service. General Pest Control: 149 SAR, Termite: 299 SAR, Rodent: 199 SAR, Mosquito: 89 SAR.",
+    
+    // Chat
+    "can i message": "Yes! You can chat with your assigned technician through the chat feature in your active order details.",
+    "chat": "Click on any active order and select the chat icon to message your technician directly.",
+    
+    // Technical
+    "issue": "We're sorry you're experiencing an issue. Please describe it and we'll help! Common issues can often be solved by refreshing the app.",
+    "bug": "If you've found a bug, please describe what happened and what you expected. We'll investigate and fix it!",
+    "not working": "Try refreshing the page or restarting the app. If the issue persists, please contact support with details.",
+    
+    // General
+    "help": "I'm here to help! You can ask about booking, services, tracking, payments, or any issues you're experiencing.",
+    "support": "Our support team is available 24/7. You can chat with us here or contact via WhatsApp for urgent issues.",
+    "contact": "You can reach us through this chat, WhatsApp, or visit our office in Riyadh.",
+  };
+
+  for (const [key, response] of Object.entries(responses)) {
+    if (lowerQ.includes(key)) {
+      return response;
+    }
+  }
+  
+  return "I'm here to help! Try asking about booking services, how to track orders, available services, pricing, or any issues you're facing.";
+};
+
 export default function Profile() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, logout, updateUser } = useAuth();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [showPersonalInfo, setShowPersonalInfo] = useState(false);
+  const [showSupport, setShowSupport] = useState(false);
   const [editName, setEditName] = useState(user?.name || "");
   const [editPhone, setEditPhone] = useState(user?.phone || "");
+  const [supportMessages, setSupportMessages] = useState<Array<{id: string, text: string, sender: 'user' | 'bot'}>>([
+    { id: '1', text: "Hi! 👋 How can I help you today?", sender: 'bot' }
+  ]);
+  const [supportInput, setSupportInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [supportMessages]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -91,6 +154,19 @@ export default function Profile() {
     });
   };
 
+  const handleSendSupportMessage = () => {
+    if (!supportInput.trim()) return;
+
+    const userMessage = supportInput.trim();
+    setSupportMessages(prev => [...prev, { id: Date.now().toString(), text: userMessage, sender: 'user' }]);
+    setSupportInput("");
+
+    setTimeout(() => {
+      const botResponse = getSupportResponses(userMessage, t);
+      setSupportMessages(prev => [...prev, { id: (Date.now() + 1).toString(), text: botResponse, sender: 'bot' }]);
+    }, 300);
+  };
+
   return (
     <div className="pb-24 pt-8 px-4 max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-6">{t("trackingDetails.myProfile")}</h1>
@@ -158,25 +234,40 @@ export default function Profile() {
 
         <section>
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 pl-1">{t("profile.preferences")}</h3>
-          <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden p-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">{t("trackingDetails.pushNotifications")}</span>
-              <Switch defaultChecked />
+          <div className="bg-card rounded-2xl shadow-sm border border-border/50 overflow-hidden">
+            <div className="p-4 space-y-4 border-b border-border/30">
+              <div className="flex items-center justify-between">
+                <span className="font-medium">{t("trackingDetails.pushNotifications")}</span>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="font-medium">{t("trackingDetails.emailUpdates")}</span>
+                <Switch />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="font-medium flex items-center gap-2">
+                  {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                  {t("profile.darkMode")}
+                </span>
+                <Switch 
+                  checked={theme === 'dark'} 
+                  onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')} 
+                />
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="font-medium">{t("trackingDetails.emailUpdates")}</span>
-              <Switch />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-medium flex items-center gap-2">
-                {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-                {t("profile.darkMode")}
-              </span>
-              <Switch 
-                checked={theme === 'dark'} 
-                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')} 
-              />
-            </div>
+            
+            {/* Customer Support Option */}
+            <button
+              onClick={() => setShowSupport(true)}
+              className="w-full flex items-center justify-between p-4 hover:bg-secondary/10 transition-colors"
+              data-testid="button-customer-support"
+            >
+              <div className="flex items-center gap-3">
+                <MessageCircle className="w-5 h-5 text-primary" />
+                <span className="font-medium">Customer Support</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+            </button>
           </div>
         </section>
 
@@ -190,70 +281,172 @@ export default function Profile() {
       </div>
 
       {/* Personal Information Modal */}
-      {showPersonalInfo && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end" onClick={() => setShowPersonalInfo(false)}>
-          <div 
-            className="w-full bg-card rounded-t-3xl p-6 space-y-4 animate-in slide-in-from-bottom-5 max-h-[90vh] overflow-y-auto pb-32"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {showPersonalInfo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-end"
+            onClick={() => setShowPersonalInfo(false)}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">{t("trackingDetails.personalInformation")}</h2>
-              <button
-                onClick={() => setShowPersonalInfo(false)}
-                className="p-1 hover:bg-secondary rounded-lg transition-colors"
-                data-testid="button-close-personal-info"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor="edit-name">{t("auth.name")}</Label>
-                <Input
-                  id="edit-name"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  placeholder={t("auth.name")}
-                  className="h-11 rounded-xl bg-card/50"
-                  data-testid="input-edit-name"
-                />
+            <motion.div 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 30 }}
+              className="w-full bg-card rounded-t-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto pb-32"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">{t("trackingDetails.personalInformation")}</h2>
+                <button
+                  onClick={() => setShowPersonalInfo(false)}
+                  className="p-1 hover:bg-secondary rounded-lg transition-colors"
+                  data-testid="button-close-personal-info"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="edit-phone">{t("profile.phoneNumber")}</Label>
-                <Input
-                  id="edit-phone"
-                  type="tel"
-                  value={editPhone}
-                  onChange={(e) => setEditPhone(e.target.value)}
-                  placeholder="e.g., +966 50 123 4567"
-                  className="h-11 rounded-xl bg-card/50"
-                  data-testid="input-edit-phone"
-                />
-              </div>
-            </div>
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-name">{t("auth.name")}</Label>
+                  <Input
+                    id="edit-name"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    placeholder={t("auth.name")}
+                    className="h-11 rounded-xl bg-card/50"
+                    data-testid="input-edit-name"
+                  />
+                </div>
 
-            <div className="flex gap-3 pt-6 fixed bottom-24 left-0 right-0 px-4 bg-card">
-              <Button
-                variant="outline"
-                className="flex-1 h-11 rounded-xl"
-                onClick={() => setShowPersonalInfo(false)}
-                data-testid="button-cancel-personal-info"
-              >
-                {t("common.cancel")}
-              </Button>
-              <Button
-                className="flex-1 h-11 rounded-xl"
-                onClick={handleSavePersonalInfo}
-                data-testid="button-save-personal-info"
-              >
-                {t("common.save")}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+                <div className="space-y-2">
+                  <Label htmlFor="edit-phone">{t("profile.phoneNumber")}</Label>
+                  <Input
+                    id="edit-phone"
+                    type="tel"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    placeholder="e.g., +966 50 123 4567"
+                    className="h-11 rounded-xl bg-card/50"
+                    data-testid="input-edit-phone"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-6 fixed bottom-24 left-0 right-0 px-4 bg-card">
+                <Button
+                  variant="outline"
+                  className="flex-1 h-11 rounded-xl"
+                  onClick={() => setShowPersonalInfo(false)}
+                  data-testid="button-cancel-personal-info"
+                >
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  className="flex-1 h-11 rounded-xl"
+                  onClick={handleSavePersonalInfo}
+                  data-testid="button-save-personal-info"
+                >
+                  {t("common.save")}
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Customer Support Chatbot Modal */}
+      <AnimatePresence>
+        {showSupport && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-end"
+            onClick={() => setShowSupport(false)}
+          >
+            <motion.div 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 30 }}
+              className="w-full bg-card rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="p-4 border-b border-border/30 flex items-center justify-between bg-gradient-to-r from-primary/10 to-primary/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                    <MessageCircle className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">SEMAS Support</h2>
+                    <p className="text-xs text-muted-foreground">AI Assistant • Always Available</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowSupport(false)}
+                  className="p-1 hover:bg-secondary rounded-lg transition-colors"
+                  data-testid="button-close-support"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {supportMessages.map((msg, i) => (
+                  <motion.div
+                    key={msg.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-xs px-4 py-2 rounded-2xl ${
+                        msg.sender === 'user'
+                          ? 'bg-primary text-primary-foreground rounded-br-none'
+                          : 'bg-secondary/50 text-foreground rounded-bl-none'
+                      }`}
+                    >
+                      <p className="text-sm leading-relaxed">{msg.text}</p>
+                    </div>
+                  </motion.div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input Area */}
+              <div className="p-4 border-t border-border/30 bg-background">
+                <div className="flex gap-2">
+                  <Input
+                    value={supportInput}
+                    onChange={(e) => setSupportInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendSupportMessage()}
+                    placeholder="Ask your question..."
+                    className="flex-1 h-10 rounded-full bg-card border-border/50"
+                    data-testid="input-support-message"
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleSendSupportMessage}
+                    disabled={!supportInput.trim()}
+                    className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                    data-testid="button-send-support-message"
+                  >
+                    <Send className="w-4 h-4" />
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

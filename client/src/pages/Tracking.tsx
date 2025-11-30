@@ -124,7 +124,7 @@ export default function Tracking() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    <span data-testid="text-service-time">{t("common.serviceTime")}</span>
+                    <span data-testid="text-service-time">{t("home.serviceTime")}</span>
                   </div>
                 </div>
 

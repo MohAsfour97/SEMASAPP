@@ -120,6 +120,7 @@ export const translations = {
       language: "Language",
       contactSupport: "Contact Support",
       about: "About SEMAS",
+      phoneNumber: "Phone Number",
     },
     // Employee Dashboard
     dashboard: {
@@ -279,6 +280,7 @@ export const translations = {
       phoneNumberCopied: "Phone number copied to clipboard",
       phoneNumberNotAvailable: "Phone number not available",
       phoneNumberCopyFailed: "Unable to copy phone number",
+      serviceTime: "Service Time",
     },
     // File Upload
     fileUpload: {
@@ -567,6 +569,7 @@ export const translations = {
       phoneNumberCopied: "تم نسخ رقم الهاتف إلى الحافظة",
       phoneNumberNotAvailable: "رقم الهاتف غير متاح",
       phoneNumberCopyFailed: "فشل نسخ رقم الهاتف",
+      serviceTime: "وقت الخدمة",
     },
     // File Upload
     fileUpload: {

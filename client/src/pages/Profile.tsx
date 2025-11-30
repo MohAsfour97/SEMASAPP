@@ -373,7 +373,7 @@ export default function Profile() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30 }}
-              className="w-full bg-card rounded-t-3xl h-[90vh] flex flex-col overflow-hidden"
+              className="w-full bg-card rounded-t-3xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header - Fixed */}
@@ -421,14 +421,14 @@ export default function Profile() {
               </div>
 
               {/* Input Area - Fixed at Bottom */}
-              <div className="flex-shrink-0 p-4 border-t border-border/30 bg-background">
+              <div className="flex-shrink-0 p-4 pb-8 border-t border-border/30 bg-background safe-area-bottom">
                 <div className="flex gap-2">
                   <Input
                     value={supportInput}
                     onChange={(e) => setSupportInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendSupportMessage()}
                     placeholder="Ask your question..."
-                    className="flex-1 h-10 rounded-full bg-card border-border/50"
+                    className="flex-1 h-11 rounded-full bg-card border-border/50 text-base"
                     data-testid="input-support-message"
                   />
                   <motion.button
@@ -436,10 +436,10 @@ export default function Profile() {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleSendSupportMessage}
                     disabled={!supportInput.trim()}
-                    className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 disabled:opacity-50 transition-colors flex-shrink-0"
+                    className="w-11 h-11 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 disabled:opacity-50 transition-colors flex-shrink-0"
                     data-testid="button-send-support-message"
                   >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-5 h-5" />
                   </motion.button>
                 </div>
               </div>

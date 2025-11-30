@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles, Search, Bug } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles, Search, Bug, Rat, X, Check } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/lib/language";
@@ -12,6 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
+import generalBg from "@assets/generated_images/general_pest_control_spray_treatment.png";
+import termiteBg from "@assets/generated_images/termite_inspection_and_wood_damage.png";
 
 const serviceTranslationMap: Record<string, string> = {
   "General Pest Control": "servicesDetails.generalPestControl",
@@ -25,6 +27,35 @@ const getTranslatedServiceName = (serviceName: string, t: any): string => {
   return key ? t(key) : serviceName;
 };
 
+const getPopularServicesList = (t: any) => [
+  {
+    id: "termite",
+    titleKey: "servicesDetails.termiteDefense",
+    descriptionKey: "servicesDetails.termiteDesc",
+    price: "299",
+    featuresKeys: ["servicesDetails.thoroughInspection", "servicesDetails.baitStation", "servicesDetails.annualMonitoring"],
+    icon: Search,
+    color: "text-orange-600",
+    bg: "bg-orange-100",
+    bgImage: termiteBg,
+  },
+  {
+    id: "general",
+    titleKey: "servicesDetails.generalPestControl",
+    descriptionKey: "servicesDetails.generalPestDesc",
+    price: "149",
+    featuresKeys: ["servicesDetails.interiorExterior", "servicesDetails.webRemoval", "servicesDetails.guarantee"],
+    icon: Bug,
+    color: "text-primary",
+    bg: "bg-primary/10",
+    bgImage: generalBg,
+  },
+];
+
+const getAverageRating = (serviceTitle: string) => {
+  return "4.9"; // Default high rating for demo
+};
+
 export default function Home() {
   const { t, language } = useLanguage();
   const { user, getUserById } = useAuth();
@@ -33,6 +64,7 @@ export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set(['section-stats', 'section-active-service', 'section-popular-services', 'section-visit-us']));
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
   const lastScrollY = useRef(0);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [inquiryData, setInquiryData] = useState({
@@ -41,6 +73,7 @@ export default function Home() {
     phone: "",
     message: ""
   });
+  const popularServicesList = getPopularServicesList(t);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -284,20 +317,22 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link href={`/book?service=${service.id}`}>
-                  <Card className="border-border/50 shadow-sm hover:shadow-md transition-all active:scale-[0.99] cursor-pointer" data-testid={`card-service-${service.id}`}>
-                    <CardContent className="p-4 flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-secondary/30 flex items-center justify-center text-primary">
-                        <service.icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-foreground">{t(service.nameKey)}</h3>
-                        <p className="text-sm text-muted-foreground">{t("common.startingAt")} {service.price} {t("common.sar")}</p>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground/50" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
-                    </CardContent>
-                  </Card>
-                </Link>
+                <Card 
+                  className="border-border/50 shadow-sm hover:shadow-md transition-all active:scale-[0.99] cursor-pointer" 
+                  data-testid={`card-service-${service.id}`}
+                  onClick={() => setSelectedService(service.id)}
+                >
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/30 flex items-center justify-center text-primary">
+                      <service.icon className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground">{t(service.nameKey)}</h3>
+                      <p className="text-sm text-muted-foreground">{t("common.startingAt")} {service.price} {t("common.sar")}</p>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground/50" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -427,6 +462,158 @@ export default function Home() {
           </div>
         </motion.section>
       </div>
+
+      {/* Service Details Modal */}
+      <AnimatePresence>
+        {selectedService && (() => {
+          const service = popularServicesList.find(s => s.id === selectedService);
+          if (!service) return null;
+          
+          return (
+            <motion.div
+              key="modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedService(null)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end"
+              data-testid="modal-service-details-home"
+            >
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full bg-card rounded-t-3xl max-h-[90vh] overflow-y-auto"
+              >
+                {/* Modal Header with Background Image */}
+                <div className="relative h-56 w-full overflow-hidden rounded-t-3xl">
+                  <img
+                    src={service.bgImage}
+                    alt={t(service.titleKey)}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                  
+                  {/* Close Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setSelectedService(null)}
+                    className="absolute top-4 right-4 bg-card/80 backdrop-blur-sm rounded-full p-2 shadow-lg"
+                    data-testid="button-close-modal"
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
+                </div>
+
+                {/* Modal Content */}
+                <div className="p-6 space-y-6">
+                  {/* Title and Rating */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-12 h-12 rounded-xl ${service.bg} flex items-center justify-center ${service.color}`}>
+                          <service.icon className="w-6 h-6" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-foreground">{t(service.titleKey)}</h2>
+                      </div>
+                      <div className="flex items-center gap-1 bg-yellow-50 px-3 py-1 rounded-full border border-yellow-200">
+                        <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                        <span className="text-sm font-bold text-yellow-700">{getAverageRating(t(service.titleKey))}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{t("common.startingAt")} <span className="text-lg font-bold text-primary">{service.price}</span> {t("common.sar")}</p>
+                  </motion.div>
+
+                  {/* Description */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    <h3 className="text-lg font-semibold mb-2">{t("servicesDetails.overview") || "Overview"}</h3>
+                    <p className="text-foreground/90 leading-relaxed">{t(service.descriptionKey)}</p>
+                  </motion.div>
+
+                  {/* Features/Details */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <h3 className="text-lg font-semibold mb-3">{t("servicesDetails.features") || "What's Included"}</h3>
+                    <div className="space-y-3">
+                      {service.featuresKeys.map((featureKey, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.25 + i * 0.05 }}
+                          className="flex items-start gap-3"
+                        >
+                          <Check className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+                          <span className="text-foreground/90">{t(featureKey)}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  {/* Additional Info */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-primary/5 rounded-xl p-4 border border-primary/10"
+                  >
+                    <p className="text-sm text-foreground/80">
+                      {t("servicesDetails.professionalSolutions") || "Our team of certified professionals is ready to help you with expert pest control services."}
+                    </p>
+                  </motion.div>
+
+                  {/* Book Button */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35 }}
+                  >
+                    <Link
+                      href="/book"
+                      onClick={() => {
+                        localStorage.setItem("selectedService", service.id);
+                        setSelectedService(null);
+                      }}
+                    >
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button
+                          className="w-full rounded-full py-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all text-base"
+                          data-testid="button-book-from-modal"
+                        >
+                          <span className="flex items-center gap-2">
+                            {t("servicesDetails.bookNow")}
+                            <ArrowRight className="w-5 h-5" style={{ transform: language === 'ar' ? 'scaleX(-1)' : 'none' }} />
+                          </span>
+                        </Button>
+                      </motion.div>
+                    </Link>
+                  </motion.div>
+
+                  {/* Spacer for safe area on mobile */}
+                  <div className="h-4" />
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
 
       <style>{`
         @keyframes slideInUp {

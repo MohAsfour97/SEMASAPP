@@ -421,7 +421,7 @@ export default function Profile() {
               </div>
 
               {/* Input Area - Fixed at Bottom */}
-              <div className="flex-shrink-0 p-4 pb-8 border-t border-border/30 bg-background safe-area-bottom">
+              <div className="flex-shrink-0 p-4 pb-20 border-t border-border/30 bg-background safe-area-bottom">
                 <div className="flex gap-2">
                   <Input
                     value={supportInput}

@@ -186,7 +186,7 @@ export default function Home() {
               </motion.div>
             </div>
             <span className="text-xs font-medium text-muted-foreground">{t("home.protected")}</span>
-            <span className="text-lg font-bold text-foreground">365d</span>
+            <span className="text-lg font-bold text-foreground">{t("home.protectedDays")}</span>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-orange-100 p-2 rounded-full mb-2">
@@ -198,7 +198,7 @@ export default function Home() {
               </motion.div>
             </div>
             <span className="text-xs font-medium text-muted-foreground">{t("home.rating")}</span>
-            <span className="text-lg font-bold text-foreground">4.9</span>
+            <span className="text-lg font-bold text-foreground">{t("home.ratingValue")}</span>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border/50 flex flex-col items-center text-center">
             <div className="bg-blue-100 p-2 rounded-full mb-2">
@@ -210,7 +210,7 @@ export default function Home() {
               </motion.div>
             </div>
             <span className="text-xs font-medium text-muted-foreground">{t("home.arrival")}</span>
-            <span className="text-lg font-bold text-foreground">&lt;24h</span>
+            <span className="text-lg font-bold text-foreground">&lt;{t("home.arrivalTime")}</span>
           </div>
         </motion.div>
 
@@ -241,12 +241,14 @@ export default function Home() {
                   </div>
                   <span className={`text-xs font-bold px-2 py-1 rounded-full ${
                     activeOrder.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+            
                     activeOrder.status === 'accepted' ? 'bg-blue-100 text-blue-700' :
                     activeOrder.status === 'en_route' ? 'bg-purple-100 text-purple-700' :
                     'bg-orange-100 text-orange-700'
                   }`} data-testid="badge-status">
                     {activeOrder.status.replace('_', ' ').toUpperCase()}
-                  </span>
+                    
+                  </span> 
                 </div>
                 {technician && (
                   <div className="flex items-center gap-3 pt-3 border-t border-border/50">

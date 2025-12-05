@@ -97,7 +97,16 @@ export default function Tracking() {
                         order.status === 'completed' ? 'bg-green-100 text-green-700' :
                         'bg-gray-100 text-gray-700'}
                     `}>
-                      {order.status.replace('_', ' ').toUpperCase()}
+                      {
+                        {
+                          pending: t("tracking.pending"),
+                          accepted: t("tracking.accepted"),
+                          en_route: t("tracking.enRoute"),
+                          in_progress: t("tracking.inProgress"),
+                          completed: t("tracking.completed"),
+                          cancelled: t("tracking.cancelled")
+                        }[order.status]
+                      }
                     </span>
                     <h3 className="font-bold text-lg">
                       {(() => {

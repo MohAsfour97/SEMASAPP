@@ -36,6 +36,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
+      <Route path="/welcome" component={() => <Welcome onComplete={() => window.location.href = "/auth"} />} />
       <Route path="/" component={() => <ProtectedRoute component={HomeRouter} />} />
       <Route path="/services" component={() => <ProtectedRoute component={Services} />} />
       <Route path="/book" component={() => <ProtectedRoute component={Booking} />} />

@@ -50,8 +50,8 @@ function Router() {
 
 function NavigationWrapper() {
   const [location] = useWouterLocation();
-  // Hide bottom nav on auth page and chat page (to give more space for typing)
-  if (location === "/auth" || location.startsWith("/chat/")) return null;
+  // Hide bottom nav on auth page, welcome page, and chat page (to give more space for typing)
+  if (location === "/auth" || location === "/welcome" || location.startsWith("/chat/")) return null;
   return <BottomNav />;
 }
 

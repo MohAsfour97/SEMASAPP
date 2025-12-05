@@ -13,7 +13,10 @@ import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useOrders } from "@/lib/orders";
 import { useAuth } from "@/lib/auth";
+import { usePayment } from "@/lib/payment";
 import LocationPicker from "@/components/LocationPicker";
+import PaymentMethodSelector from "@/components/PaymentMethodSelector";
+import CardPaymentForm from "@/components/CardPaymentForm";
 
 const getSteps = (t: any) => [
   { id: 1, title: t("bookingSteps.serviceDetails") },
@@ -49,6 +52,7 @@ export default function Booking() {
   const { toast } = useToast();
   const { createOrder } = useOrders();
   const { user } = useAuth();
+  const { selectedPaymentMethod, cardDetails, processPayment } = usePayment();
   
   const [loading, setLoading] = useState(false);
 
@@ -99,28 +103,71 @@ export default function Booking() {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleBooking = () => {
-    if (!user) return;
+  const handleBooking = async () => {
+    if (!user || !selectedPaymentMethod) {
+      toast({
+        title: t("payment.error"),
+        description: t("payment.selectPaymentMethodFirst"),
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate card details if card payment is selected
+    if (selectedPaymentMethod === "card" && !cardDetails) {
+      toast({
+        title: t("payment.error"),
+        description: t("payment.enterCardDetails"),
+        variant: "destructive"
+      });
+      return;
+    }
     
     setLoading(true);
-    
-    setTimeout(() => {
+
+    try {
+      // Process payment
+      const paymentResult = await processPayment({
+        method: selectedPaymentMethod,
+        cardDetails: selectedPaymentMethod === "card" ? cardDetails || undefined : undefined,
+        amount: 149,
+        currency: "SAR"
+      });
+
+      if (!paymentResult.success) {
+        setLoading(false);
+        toast({
+          title: t("payment.failed"),
+          description: paymentResult.error || t("payment.tryAgain"),
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Create order after successful payment
       createOrder({
         customerId: user.id,
         customerName: user.name,
         serviceType,
         date: date || new Date(),
-        address: address || "123 Main St", // Fallback for demo
+        address: address || "123 Main St",
         description: description || "No description provided",
       });
 
       setLoading(false);
       toast({
-        title: t("booking.bookingConfirmed"),
-        description: t("bookingDetails.requestSent"),
+        title: t("payment.success"),
+        description: `${t("payment.transactionId")}: ${paymentResult.transactionId}`,
       });
       setLocation("/track");
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      toast({
+        title: t("payment.error"),
+        description: t("payment.somethingWentWrong"),
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -343,19 +390,29 @@ export default function Booking() {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <Label>{t("bookingDetails.paymentMethod")}</Label>
-                <div className="flex items-center gap-4 p-4 border rounded-xl bg-card">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <CreditCard className="w-5 h-5" />
+              <PaymentMethodSelector />
+
+              {selectedPaymentMethod === "card" && <CardPaymentForm />}
+              
+              {selectedPaymentMethod === "apple_pay" && (
+                <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-6 text-white">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <Smartphone className="w-6 h-6" />
+                    <span className="text-lg font-semibold">Apple Pay</span>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">•••• •••• •••• 4242</p>
-                    <p className="text-xs text-muted-foreground">{t("bookingDetails.expires")} 12/25</p>
-                  </div>
-                  <Button variant="ghost" size="sm" className="text-primary">{t("bookingDetails.change")}</Button>
+                  <p className="text-sm text-gray-300 text-center">{t("payment.applePayReady")}</p>
                 </div>
-              </div>
+              )}
+
+              {selectedPaymentMethod === "cash_on_delivery" && (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Banknote className="w-6 h-6 text-green-600" />
+                    <span className="text-lg font-semibold text-green-900">{t("payment.cashOnDelivery")}</span>
+                  </div>
+                  <p className="text-sm text-green-700">{t("payment.payTechnicianCash")}</p>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

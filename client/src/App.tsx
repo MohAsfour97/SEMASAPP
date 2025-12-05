@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, ProtectedRoute, useAuth } from "@/lib/auth";
 import { OrderProvider } from "@/lib/orders";
-import { PaymentProvider } from "@/lib/payment";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/language";
 import NotFound from "@/pages/not-found";
@@ -25,11 +24,11 @@ import { useState, useEffect } from "react";
 // Dynamic Home Component based on Role
 function HomeRouter() {
   const { user } = useAuth();
-
+  
   if (user?.role === "technician" || user?.role === "admin") {
     return <EmployeeDashboard />;
   }
-
+  
   return <Home />;
 }
 
@@ -84,9 +83,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="semas-ui-theme">
         <LanguageProvider>
-          <AuthProvider>
-            <OrderProvider>
-              <PaymentProvider>
+          <TooltipProvider>
+            <AuthProvider>
+              <OrderProvider>
                 {showWelcome ? (
                   <Welcome onComplete={handleWelcomeComplete} />
                 ) : (
@@ -97,9 +96,9 @@ function App() {
                     <Toaster />
                   </div>
                 )}
-              </PaymentProvider>
-            </OrderProvider>
-          </AuthProvider>
+              </OrderProvider>
+            </AuthProvider>
+          </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>

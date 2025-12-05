@@ -1,4 +1,4 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route, useLocation as useWouterLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -48,14 +48,14 @@ function Router() {
 }
 
 function NavigationWrapper() {
-  const [location] = useLocation();
+  const [location] = useWouterLocation();
   // Hide bottom nav on auth page and chat page (to give more space for typing)
   if (location === "/auth" || location.startsWith("/chat/")) return null;
   return <BottomNav />;
 }
 
 function HeaderWrapper() {
-  const [location] = useLocation();
+  const [location] = useWouterLocation();
   // Hide header controls on auth page only
   if (location === "/auth") return null;
   return <HeaderControls />;
@@ -74,6 +74,8 @@ function App() {
   const handleWelcomeComplete = () => {
     localStorage.setItem("hasSeenWelcome", "true");
     setShowWelcome(false);
+    // Redirect to auth page after welcome
+    window.location.href = "/auth";
   };
 
   return (

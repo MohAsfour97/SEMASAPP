@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Shield, Clock, Star, CheckCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language";
+import { useEffect } from "react";
 import heroImage from "@assets/generated_images/pest_control_technician_outdoor_service_landscape.png";
 
 interface WelcomeProps {
@@ -10,7 +11,12 @@ interface WelcomeProps {
 }
 
 export default function Welcome({ onComplete }: WelcomeProps) {
-  const { t } = useLanguage();
+  const { t, setLanguage } = useLanguage();
+
+  // Set Arabic as default when Welcome page loads
+  useEffect(() => {
+    setLanguage("ar");
+  }, []);
 
   const features = [
     {

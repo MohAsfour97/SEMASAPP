@@ -155,7 +155,22 @@ export const translations = {
     },
     // Legal
     legal: {
-      termsAndPrivacy: "By continuing, you agree to our Terms of Service and Privacy Policy.",
+      termsAndPrivacy: "By continuing, you agree to our Terms & Privacy Policy",
+    },
+
+    // Welcome Page
+    welcome: {
+      title: "Welcome to SEMAS",
+      subtitle: "Professional pest control services at your fingertips",
+      whyChooseUs: "Why Choose SEMAS?",
+      whyChooseUsDesc: "Experience the best in professional pest control with our certified experts.",
+      safeEffective: "Safe & Effective",
+      safeEffectiveDesc: "Eco-friendly solutions that protect your family and pets",
+      fastService: "Fast Service",
+      fastServiceDesc: "Quick response time with same-day availability",
+      expertTeam: "Expert Team",
+      expertTeamDesc: "Certified technicians with years of experience",
+      getStarted: "Get Started",
     },
     // Auth Page
     authPage: {
@@ -456,7 +471,22 @@ export const translations = {
     },
     // Legal
     legal: {
-      termsAndPrivacy: "بمتابعتك، فإنك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.",
+      termsAndPrivacy: "بالمتابعة، أنت توافق على الشروط وسياسة الخصوصية",
+    },
+
+    // Welcome Page
+    welcome: {
+      title: "مرحباً بك في سيماس",
+      subtitle: "خدمات مكافحة الآفات الاحترافية في متناول يدك",
+      whyChooseUs: "لماذا تختار سيماس؟",
+      whyChooseUsDesc: "اختبر الأفضل في مكافحة الآفات الاحترافية مع خبرائنا المعتمدين.",
+      safeEffective: "آمن وفعال",
+      safeEffectiveDesc: "حلول صديقة للبيئة تحمي عائلتك وحيواناتك الأليفة",
+      fastService: "خدمة سريعة",
+      fastServiceDesc: "وقت استجابة سريع مع إمكانية الخدمة في نفس اليوم",
+      expertTeam: "فريق خبراء",
+      expertTeamDesc: "فنيون معتمدون مع سنوات من الخبرة",
+      getStarted: "ابدأ الآن",
     },
     // Auth Page
     authPage: {

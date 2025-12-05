@@ -16,8 +16,10 @@ import Profile from "@/pages/Profile";
 import AuthPage from "@/pages/Auth";
 import EmployeeDashboard from "@/pages/EmployeeDashboard";
 import Chat from "@/pages/Chat";
+import Welcome from "@/pages/Welcome";
 import BottomNav from "@/components/BottomNav";
 import HeaderControls from "@/components/HeaderControls";
+import { useState, useEffect } from "react";
 
 // Dynamic Home Component based on Role
 function HomeRouter() {
@@ -60,6 +62,20 @@ function HeaderWrapper() {
 }
 
 function App() {
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const hasSeenWelcome = localStorage.getItem("hasSeenWelcome");
+    if (!hasSeenWelcome) {
+      setShowWelcome(true);
+    }
+  }, []);
+
+  const handleWelcomeComplete = () => {
+    localStorage.setItem("hasSeenWelcome", "true");
+    setShowWelcome(false);
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="semas-ui-theme">
@@ -67,12 +83,16 @@ function App() {
           <TooltipProvider>
             <AuthProvider>
               <OrderProvider>
-                <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
-                  <HeaderWrapper />
-                  <Router />
-                  <NavigationWrapper />
-                  <Toaster />
-                </div>
+                {showWelcome ? (
+                  <Welcome onComplete={handleWelcomeComplete} />
+                ) : (
+                  <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
+                    <HeaderWrapper />
+                    <Router />
+                    <NavigationWrapper />
+                    <Toaster />
+                  </div>
+                )}
               </OrderProvider>
             </AuthProvider>
           </TooltipProvider>

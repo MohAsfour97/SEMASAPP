@@ -246,8 +246,14 @@ export default function Home() {
                     activeOrder.status === 'en_route' ? 'bg-purple-100 text-purple-700' :
                     'bg-orange-100 text-orange-700'
                   }`} data-testid="badge-status">
-                    {activeOrder.status.replace('_', ' ').toUpperCase()}
-                    
+                    {
+                        {
+                          pending: t("tracking.pending"),
+                          accepted: t("tracking.accepted"),
+                          en_route: t("tracking.enRoute")
+                        }[order.status]
+                      }
+            
                   </span> 
                 </div>
                 {technician && (

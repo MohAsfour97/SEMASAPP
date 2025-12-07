@@ -247,16 +247,22 @@ export default function Home() {
                     <h3 className="font-semibold text-foreground" data-testid="text-service-name">{getTranslatedServiceName(activeOrder.serviceType, t)}</h3>
                     <p className="text-sm text-muted-foreground" data-testid="text-service-time">{t("home.serviceTime")}</p>
                   </div>
-                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-                    activeOrder.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-            
-                    activeOrder.status === 'accepted' ? 'bg-blue-100 text-blue-700' :
-                    activeOrder.status === 'en_route' ? 'bg-purple-100 text-purple-700' :
-                    'bg-orange-100 text-orange-700'
-                  }`} data-testid="badge-status">
-                    {activeOrder.status.replace('_', ' ').toUpperCase()}
-            
-                  </span> 
+                  <span
+  className={`text-xs font-bold px-2 py-1 rounded-full ${
+    activeOrder.status === 'pending'
+      ? 'bg-yellow-100 text-yellow-700'
+      : activeOrder.status === 'accepted'
+      ? 'bg-blue-100 text-blue-700'
+      : activeOrder.status === 'en_route'
+      ? 'bg-purple-100 text-purple-700'
+      : 'bg-orange-100 text-orange-700'
+  }`}
+  data-testid="badge-status"
+>
+  {activeOrder.status === 'pending' && t("tracking.pending")}
+  {activeOrder.status === 'accepted' && t("tracking.accepted")}
+  {activeOrder.status === 'en_route' && t("tracking.enRoute")}
+</span>
                 </div>
                 {technician && (
                   <div className="flex items-center gap-3 pt-3 border-t border-border/50">

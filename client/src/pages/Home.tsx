@@ -230,7 +230,7 @@ export default function Home() {
     animate={{ rotate: 360 }}
     transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
   >
-    <Sparkles className="w-5 h-5 text-primary" />
+    <Orbit className="w-5 h-5 text-primary" />
   </motion.div>
   {t("home.activeService")}
 </h2>

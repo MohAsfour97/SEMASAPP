@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles, Search, Bug, Rat, X, Check } from "lucide-react";
+import { Shield, Clock, Star, CheckCircle, ArrowRight, MessageCircle, MessageSquare, Sparkles, Orbit, Search, Bug, Rat, X, Check } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/lib/language";

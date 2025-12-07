@@ -225,7 +225,15 @@ export default function Home() {
           transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
           data-testid="section-active-service">
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold" data-testid="heading-active-service">{t("home.activeService")}</h2>
+            <h2 className="text-lg font-semibold flex items-center gap-2" data-testid="heading-active-service">
+  <motion.div 
+    animate={{ rotate: 360 }}
+    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+  >
+    <Sparkles className="w-5 h-5 text-primary" />
+  </motion.div>
+  {t("home.activeService")}
+</h2>
             <Link href="/track">
               <span className="text-primary text-sm font-medium cursor-pointer" data-testid="link-track-order">{t("home.track")}</span>
             </Link>
